@@ -1,26 +1,26 @@
 {
   "files": {
-    "main.css": "/studhelper/static/css/main.981f7211.chunk.css",
-    "main.js": "/studhelper/static/js/main.9a95eda1.chunk.js",
-    "main.js.map": "/studhelper/static/js/main.9a95eda1.chunk.js.map",
-    "runtime-main.js": "/studhelper/static/js/runtime-main.9c9ea4ef.js",
-    "runtime-main.js.map": "/studhelper/static/js/runtime-main.9c9ea4ef.js.map",
-    "static/css/2.86df01db.chunk.css": "/studhelper/static/css/2.86df01db.chunk.css",
-    "static/js/2.9186cf22.chunk.js": "/studhelper/static/js/2.9186cf22.chunk.js",
-    "static/js/2.9186cf22.chunk.js.map": "/studhelper/static/js/2.9186cf22.chunk.js.map",
-    "index.html": "/studhelper/index.html",
-    "precache-manifest.ecfb651e9caa6e8c9fc2ae33baaeb58e.js": "/studhelper/precache-manifest.ecfb651e9caa6e8c9fc2ae33baaeb58e.js",
-    "service-worker.js": "/studhelper/service-worker.js",
-    "static/css/2.86df01db.chunk.css.map": "/studhelper/static/css/2.86df01db.chunk.css.map",
-    "static/css/main.981f7211.chunk.css.map": "/studhelper/static/css/main.981f7211.chunk.css.map",
-    "static/js/2.9186cf22.chunk.js.LICENSE.txt": "/studhelper/static/js/2.9186cf22.chunk.js.LICENSE.txt",
-    "static/media/persik.png": "/studhelper/static/media/persik.4e1ec840.png"
+    "main.css": "./static/css/main.74ec2ee6.chunk.css",
+    "main.js": "./static/js/main.4e1191db.chunk.js",
+    "main.js.map": "./static/js/main.4e1191db.chunk.js.map",
+    "runtime-main.js": "./static/js/runtime-main.c434619a.js",
+    "runtime-main.js.map": "./static/js/runtime-main.c434619a.js.map",
+    "static/css/2.86df01db.chunk.css": "./static/css/2.86df01db.chunk.css",
+    "static/js/2.41daf958.chunk.js": "./static/js/2.41daf958.chunk.js",
+    "static/js/2.41daf958.chunk.js.map": "./static/js/2.41daf958.chunk.js.map",
+    "index.html": "./index.html",
+    "precache-manifest.84356f7d8706f947f5bc658cce69daea.js": "./precache-manifest.84356f7d8706f947f5bc658cce69daea.js",
+    "service-worker.js": "./service-worker.js",
+    "static/css/2.86df01db.chunk.css.map": "./static/css/2.86df01db.chunk.css.map",
+    "static/css/main.74ec2ee6.chunk.css.map": "./static/css/main.74ec2ee6.chunk.css.map",
+    "static/js/2.41daf958.chunk.js.LICENSE.txt": "./static/js/2.41daf958.chunk.js.LICENSE.txt",
+    "static/media/persik.png": "./static/media/persik.4e1ec840.png"
   },
   "entrypoints": [
-    "static/js/runtime-main.9c9ea4ef.js",
+    "static/js/runtime-main.c434619a.js",
     "static/css/2.86df01db.chunk.css",
-    "static/js/2.9186cf22.chunk.js",
-    "static/css/main.981f7211.chunk.css",
-    "static/js/main.9a95eda1.chunk.js"
+    "static/js/2.41daf958.chunk.js",
+    "static/css/main.74ec2ee6.chunk.css",
+    "static/js/main.4e1191db.chunk.js"
   ]
 }
