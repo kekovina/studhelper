@@ -1,0 +1,20 @@
+.err-header{
+    text-transform: uppercase;
+    font-family: 'Bellota Text';
+    font-size: 24px;
+    font-weight: 700;
+    text-align: center;
+}
+.err-descr, .err-descr-sub{
+    font-size: 16px;
+    font-family: 'Bellota Text';
+    text-align: center;
+}
+.err-body{
+    background-color: #696969;
+    padding: 5px 3px;
+    font-family: 'Courier New', Courier, monospace;
+    max-width: 80%;
+    font-size: 12px;
+    margin: 20px auto;
+}

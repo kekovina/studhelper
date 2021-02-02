@@ -1,11 +1,31 @@
 @import url('https://fonts.googleapis.com/css2?family=Ubuntu&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Bellota+Text:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700');
 
+.card-divider{
+    padding: 0 20px; 
+    margin: 5px 0 0 0;
+    font-size: 16px; 
+    font-weight: 700; 
+    text-transform: uppercase;
+    font-family: Bellota Text;
+    width: 100%;
+    /* background-color: #a0a0a0; */
+}
+.card-block{
+    background-color: #f9f9f9;
+    padding: 5px;
+    margin: 10px 0
+}
+.card-block.dark{
+    background-color: #363738;
+}
 .customcard{
     padding: 15px;
     background-color: #e7e8ec;
-    max-width: 100px;
+    width: 120px;
+    height: 200px;
     font-family: 'Bellota Text';
+    position: relative;
 }
 .card-type{
     text-transform: uppercase;
@@ -14,7 +34,7 @@
     font-weight: 700;
 }
 .card-name{
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 700;
 }
 .card-description{
@@ -23,14 +43,19 @@
 .card-total{
     text-transform: uppercase;
     font-weight: 700;
-    font-size: 16px;
-    display: flex;
-    justify-content: space-between;
-    align-items:flex-end
-}
-.card-total span:nth-child(2){
     font-size: 30px;
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+}
+.card-total-mark{
+    text-transform: uppercase;
+    font-weight: 700;
+    font-size: 20px;
     line-height: 30px;
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
 }
 .fine{
     background-color: #3dcc4b;
@@ -43,4 +68,7 @@
 }
 .fail{
     background-color: #ff3347;
+}
+.empty{
+    background-color: #aaa;
 }

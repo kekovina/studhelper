@@ -7,22 +7,29 @@ import Group from '@vkontakte/vkui/dist/components/Group/Group';
 import Cell from '@vkontakte/vkui/dist/components/Cell/Cell';
 import Div from '@vkontakte/vkui/dist/components/Div/Div';
 import Avatar from '@vkontakte/vkui/dist/components/Avatar/Avatar';
-import { Icon16ClockOurline, Icon20EducationOutline, Icon20NewsfeedOutline, Icon24Settings } from '@vkontakte/icons'
+import { Icon16ClockOurline, Icon20EducationOutline, Icon20NewsfeedOutline, Icon24Settings, Icon20ServicesOutline } from '@vkontakte/icons'
 
-const Home = ({ id, go, fetchedUser }) => (
+const admins = [503012833]
+
+const Home = ({ id, go, fetchedUser, appUser }) => (
 	<Panel id={id}>
 		<PanelHeader>Привет!</PanelHeader>
 		{fetchedUser &&
-		<Group title="User Data Fetched with VK Bridge">
+		<Group>
 			<Cell
 				before={fetchedUser.photo_200 ? <Avatar src={fetchedUser.photo_200}/> : null}
-				description={`Студент группы N`}
+				description={(fetchedUser.sex == 1 ? "Студентка" : "Студент") +" " +(appUser.status || "")}
 			>
 				{`${fetchedUser.first_name} ${fetchedUser.last_name}`}
 			</Cell>
 		</Group>}
 
-		<Group title="Navigation Example">
+		<Group>
+			<Cell expandable before={<Icon20ServicesOutline width={28}/>} onClick={go} data-to="schedule">
+            Управление
+            </Cell>
+		</Group>
+		<Group>
 
             <Cell expandable before={<Icon16ClockOurline width={28}/>} onClick={go} data-to="schedule">
               Расписание
