@@ -14,7 +14,8 @@ import Progress from './panels/Progress'
 import Start from './panels/Start'
 import DetailedProgress from './panels/DetailedProgress'
 import Error from './panels/Error'
-// import AdminMenu from './panels/AdminMenu'
+import AdminMenu from './panels/AdminMenu'
+import LastVisit from './panels/admin/LastVisit'
 
 const App = () => {
 	const [activePanel, setActivePanel] = useState('home');
@@ -93,12 +94,14 @@ const App = () => {
 			<Start id="start" createError={createError} createUser={createUser} setPopout={setPopout} setActivePanel={setActivePanel} setAppUser={setAppUser} vku={fetchedUser}/>
 			<Home id='home' fetchedUser={fetchedUser} go={go} appUser={appUser}/>
 			<Persik id='persik' go={go} />
-			<Schedule id="schedule" go={go} />
+			<Schedule id="schedule" go={go} setPopout={setPopout}/>
 			<Settings id="settings" go={go} />
 			<DetailedProgress id="detailedprogress" go={go} data={detailed}/>
 			<Error id='error' err={error}/>
 			<Progress id="progress" go={go} setPopout={setPopout} appUser={appUser} setDetailed={setDetailed} progress={progress} setProgress={setProgress}/>
-			{/* <AdminMenu id="adminMenu" go={go} /> */}
+			
+			<AdminMenu id="adminMenu" go={go} />
+			<LastVisit id="lastVisit" go={go} setPopout={setPopout}/>
 		</View>
 	);
 }

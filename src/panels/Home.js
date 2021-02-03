@@ -23,14 +23,14 @@ const Home = ({ id, go, fetchedUser, appUser }) => (
 				{`${fetchedUser.first_name} ${fetchedUser.last_name}`}
 			</Cell>
 		</Group>}
-
-		<Group>
-			<Cell expandable before={<Icon20ServicesOutline width={28}/>} onClick={go} data-to="schedule">
+		{fetchedUser && admins.indexOf(fetchedUser.id) != -1 && (<Group>
+			<Cell expandable before={<Icon20ServicesOutline width={28}/>} onClick={go} data-to="adminMenu">
             Управление
             </Cell>
 		</Group>
+		)
+		}
 		<Group>
-
             <Cell expandable before={<Icon16ClockOurline width={28}/>} onClick={go} data-to="schedule">
               Расписание
             </Cell>

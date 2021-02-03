@@ -11,32 +11,14 @@ import CustomCard from '../components/CustomCard'
 import CustomGallery from '../components/CustomGallery'
 
 import { getProgress } from '../utils/ProgressParser'
+import { prepareDate } from '../utils/functions'
+
 import './Progress.css';
 
 import axios from 'axios'
 
 const osName = platform();
 
-const prepareDate = date => {
-	const updated = new Date(date)
-	const now = new Date(new Date().getTime())
-	const hours = Math.floor((now-updated)/60/60/1000)
-	const months = ["января", "февраля", "марта", "апреля", "мая", "июня", "июля", "августа", "сентября", "октября", "ноября", "декабря"]
-	console.log(hours)
-	if(hours > 8){
-		return `${updated.getDate()} ${months[updated.getMonth()]} ${updated.getFullYear()} в ${updated.getHours()}:${updated.getMinutes()}`
-	} else {
-		const minutes = Math.floor((now-updated)/60/1000)
-		if(minutes < 2 && !hours){
-			return `только что`
-		}
-		if(!hours){
-			return `${minutes} мин. назад` 
-		} else {
-			return `${hours} ч. назад`
-		}
-	}
-}
 
 
 
