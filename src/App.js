@@ -24,6 +24,7 @@ const App = () => {
 	const [popout, setPopout] = useState(<ScreenSpinner size='large' />);
 	const [detailed, setDetailed] = useState(null)
 	const [progress, setProgress] = useState(null)
+	const [schedule, setSchedule] = useState(null)
 	const [error, setError] = useState(null);
 	bridge.subscribe(({ detail: { type, data }}) => {
 		if (type === 'VKWebAppUpdateConfig') {
@@ -34,6 +35,7 @@ const App = () => {
 	});
 	const createError = (obj) => {
 		setError({...error, ...obj})
+		setActivePanel('error')
 	}
 	useEffect(() => {
 		const queueStart = (funcs) => {
@@ -94,11 +96,11 @@ const App = () => {
 			<Start id="start" createError={createError} createUser={createUser} setPopout={setPopout} setActivePanel={setActivePanel} setAppUser={setAppUser} vku={fetchedUser}/>
 			<Home id='home' fetchedUser={fetchedUser} go={go} appUser={appUser}/>
 			<Persik id='persik' go={go} />
-			<Schedule id="schedule" go={go} setPopout={setPopout}/>
+			<Schedule id="schedule" go={go} setPopout={setPopout} schedule={schedule} setSchedule={setSchedule} group={appUser.group} createError={createError}/>
 			<Settings id="settings" go={go} />
 			<DetailedProgress id="detailedprogress" go={go} data={detailed}/>
 			<Error id='error' err={error}/>
-			<Progress id="progress" go={go} setPopout={setPopout} appUser={appUser} setDetailed={setDetailed} progress={progress} setProgress={setProgress}/>
+			<Progress id="progress" go={go} createError={createError} setPopout={setPopout} appUser={appUser} setDetailed={setDetailed} progress={progress} setProgress={setProgress}/>
 			
 			<AdminMenu id="adminMenu" go={go} />
 			<LastVisit id="lastVisit" go={go} setPopout={setPopout}/>

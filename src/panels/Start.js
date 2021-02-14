@@ -19,7 +19,7 @@ const Start = props => {
             props.setPopout(null)
             if(res.data.err){
                 props.createError({type: 1, descr: res.data.text, name: "Регистрация", code: res.data, back: 'start'})
-                props.setActivePanel('error')
+                // props.setActivePanel('error')
             }else{
                 props.setActivePanel('home')
                 props.setAppUser({group: form.num, num: form.aff, status: `группы ${res.data.user.group}`})
@@ -59,7 +59,7 @@ const Start = props => {
                 onChange={onChange}
                 top="Номер группы" 
                 status={validNum ? 'valid' : 'error'}
-                bottom={validNum ? 'Мне нравится твоя группа' : 'Номер группы введён верно'}
+                bottom={validNum ? 'Мне нравится твоя группа' : 'Некорректный номер группы'}
               />
               <Input
                 type="text"
@@ -67,7 +67,7 @@ const Start = props => {
                 onChange={onChange}
                 top="Номер зачётки" 
                 status={validAff ? 'valid' : 'error'}
-                bottom={validAff ? 'Полагаю, лучшая зачётка!' : 'Номер зачётки введён верно'}
+                bottom={validAff ? 'Полагаю, лучшая зачётка!' : 'Некорректный номер зачётки'}
               />
               {validAff && validNum && <Button mode="secondary" onClick={register}>Войти</Button>}
         </FormLayout>

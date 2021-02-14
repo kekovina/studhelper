@@ -22,9 +22,10 @@ const osName = platform();
 
 
 
-const Progress = ({ setPopout, go, id, appUser, progress, setProgress }) => {
+const Progress = ({ setPopout, go, id, appUser, progress, setProgress, createError }) => {
 	// const [ subjects, setSubjects ] = useState(null)
 	const [ error, setError ] = useState(null)
+	const [ ok, setOk ] = useState(false)
 
 	const scheme = document.body.attributes.getNamedItem("scheme").value
 
@@ -34,13 +35,19 @@ const Progress = ({ setPopout, go, id, appUser, progress, setProgress }) => {
 			setPopout(<ScreenSpinner size='large' />)
 			axios.get(`https://tsu-helper-server.herokuapp.com/getProgress?num=${appUser.num}`)
 			.then(json => {
+				if(!json.data){
+					createError({type: 1, descr: "Сервер не вернул данные", name: "Пустой ответ", code: json.status + ' ' + json.statusText, back: 'home'})
+				}
 				if(!json.data.err){
 					setProgress(json.data)
+					setOk(!ok)
+				} else {
+					createError({type: 1, descr: json.data.text, name: "Ошибка запроса", code: json.data, back: 'home'})
 				}
 			})
 			.then(() => setPopout(null))
 			.catch((e) => {
-				setError(e)
+				createError({type: 2, descr: "Что-то пошло не так", name: "Внезапная ошибка", code: e, back: 'home'})
 				setPopout(null)
 			})
 	}
