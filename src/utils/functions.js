@@ -18,11 +18,23 @@ const prepareDate = date => {
 		}
 	}
 }
-const getDate = (offset = 0) => {
-	const now = new Date(new Date().getTime() + offset * 24 * 60 * 60 * 1000);
+const getDate = (date= new Date(), offset = 0) => {
+	const createOffset = new Date(date.getTime() + offset * 24 * 60 * 60 * 1000);
 	const months = ["января", "февраля", "марта", "апреля", "мая", "июня", "июля", "августа", "сентября", "октября", "ноября", "декабря"]
 	const day = ['воскресение', 'понедельник', 'вторник', 'среда', 'четверг', 'пятница', 'суббота']
-	return `${now.getDate()} ${months[now.getMonth()]}, ${day[now.getDay()]}`
+	return {day: createOffset, text: `${createOffset.getDate()} ${months[createOffset.getMonth()]}, ${day[createOffset.getDay()]}`}
+}
+const getWeek = (date = new Date()) => {
+	const numDay = date.getDay()
+	const left = numDay ? numDay - 1 : 6
+	const right = numDay ? 7 - numDay : 0
+	const res = []
+	for(let i = left; i > 0; i--){
+		res.push(new Date(date.getTime()-i*24*60*60*1000))}
+	for(let i = 0; i <= right; i++){
+		res.push(new Date(date.getTime()+i*24*60*60*1000))
+	}
+	return res
 }
 
-module.exports = { prepareDate, getDate }
+module.exports = { prepareDate, getDate, getWeek }
