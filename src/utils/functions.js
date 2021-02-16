@@ -5,7 +5,7 @@ const prepareDate = date => {
 	const months = ["января", "февраля", "марта", "апреля", "мая", "июня", "июля", "августа", "сентября", "октября", "ноября", "декабря"]
 	console.log(hours)
 	if(hours > 8){
-		return `${updated.getDate()} ${months[updated.getMonth()]} ${updated.getFullYear()} в ${updated.getHours()}:${updated.getMinutes()}`
+		return `${updated.getDate()} ${months[updated.getMonth()]} ${updated.getFullYear()} в ${((updated.getHours()+'').length < 2 ? '0' : '')+updated.getHours()}:${((updated.getMinutes()+'').length < 2 ? '0' : '')+updated.getMinutes()}`
 	} else {
 		const minutes = Math.floor((now-updated)/60/1000)
 		if(minutes < 2 && !hours){

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { platform, IOS, CellButton, Group, Header, ActionSheet, ActionSheetItem, ScreenSpinner, RichCell, Button, Cell } from '@vkontakte/vkui';
+import { platform, IOS, CellButton, Group, Header, ActionSheet, ActionSheetItem, ScreenSpinner, RichCell, Button,
+	SimpleCell, Cell, Avatar, Text } from '@vkontakte/vkui';
 import Panel from '@vkontakte/vkui/dist/components/Panel/Panel';
 import PanelHeader from '@vkontakte/vkui/dist/components/PanelHeader/PanelHeader';
 import PanelHeaderButton from '@vkontakte/vkui/dist/components/PanelHeaderButton/PanelHeaderButton';
@@ -93,12 +94,22 @@ const Schedule = props => {
 		{props.schedule ? !isOdd ? 
 		props.schedule.even[currDateSched].map(item => { 
 			const type = /^Л$/gi.test(item.type) ? "Лекция" : /^лаб/gi.test(item.type) ? "Лабораторное занятие" : /^пр/gi.test(item.type) ? "Практическое занятие" : "Тип занятия не определён"
+			const time = item.time.split('-')
 			return (<RichCell
         disabled
         multiline
         text={item.prep}
         caption={type}
         after={item.aud}
+		bottom={item.time}
+		before={<Group style={{padding: "0 10px", display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+			<Group style={{marginTop: '-11px'}}>
+				<Text>{time[0]}</Text>
+				<Text style={{marginTop: '2px'}}>{time[1]}</Text>
+			</Group>
+			<Avatar shadow={false} style={{boxShadow:  type == "Лекция" ? '0 0 15px #1fcecb' : type == "Лабораторное занятие" ? '0 0 15px #DB324D' : type == "Практическое занятие" ? "0 0 15px #3590F3" : "0 0 15px #C2BBF0", marginTop: '5px',
+			background: type == "Лекция" ? '#1fcecb' : type == "Лабораторное занятие" ? '#DB324D' : type == "Практическое занятие" ? "#3590F3" : "#C2BBF0", marginTop: '5px'}} size={24}>{item.num}</Avatar>
+		</Group>}
         actions={
           <React.Fragment>
             <Button>Сходить</Button>
@@ -111,10 +122,20 @@ const Schedule = props => {
 		)}) :
 		props.schedule.odd[currDateSched].map(item => { 
 			const type = /^Л$/gi.test(item.type) ? "Лекция" : /^лаб/gi.test(item.type) ? "Лабораторное занятие" : /^пр/gi.test(item.type) ? "Практическое занятие" : "Тип занятия не определён"
+			const time = item.time.split('-')
 			return (<RichCell
         disabled
         multiline
         text={item.prep}
+		before={<Group style={{padding: "0 10px", display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+			<Group style={{marginTop: '-11px'}}>
+				<Text>{time[0]}</Text>
+				<Text style={{marginTop: '2px'}}>{time[1]}</Text>
+			</Group>
+			<Avatar shadow={false} style={{boxShadow:  type == "Лекция" ? '0 0 15px #1fcecb' : type == "Лабораторное занятие" ? '0 0 15px #DB324D' : type == "Практическое занятие" ? "0 0 15px #3590F3" : "0 0 15px #C2BBF0", marginTop: '5px',
+			background: type == "Лекция" ? '#1fcecb' : type == "Лабораторное занятие" ? '#DB324D' : type == "Практическое занятие" ? "#3590F3" : "#C2BBF0", marginTop: '5px'}} size={24}>{item.num}</Avatar>
+		</Group>}
+		// before={<Avatar shadow={false} style={{background: 'red'}} size={28}>{item.num}</Avatar>}
         caption={type}
         after={item.aud}
         actions={
