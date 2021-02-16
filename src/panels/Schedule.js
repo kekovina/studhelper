@@ -148,8 +148,19 @@ const Schedule = props => {
 			</Group>
 			</Group>}
 		// before={<Avatar shadow={false} style={{background: 'red'}} size={28}>{item.num}</Avatar>}
-        caption={<div style={{display: 'flex', flexDirection: 'row', paddingLeft: "5px", background: `linear-gradient(90deg, ${color}, 40%, transparent)`, color: 'white'}}>
+        caption={<div>
+		<div style={{display: 'flex', flexDirection: 'row', paddingLeft: "5px", background: `linear-gradient(90deg, ${color}, 40%, transparent)`, color: 'white'}}>
 			<Text>{type}</Text>
+		</div>
+		{item.pg === null ? 
+		<div style={{display: 'flex', flexDirection: 'row', paddingLeft: "5px", background: `linear-gradient(90deg, #53105E, 40%, transparent)`, color: 'white'}}>
+			<Text>Не удалось определить подгруппу</Text>
+		</div> : ''}
+		{item.pg? 
+		<div style={{display: 'flex', flexDirection: 'row', paddingLeft: "5px", background: `linear-gradient(90deg, #53105E, 40%, transparent)`, color: 'white'}}>
+			<Text>Подгруппа {item.pg}</Text>
+		</div> : ''}
+		
 		</div>}
         after={item.aud}
         // actions={
