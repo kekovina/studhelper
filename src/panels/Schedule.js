@@ -118,6 +118,8 @@ const Schedule = props => {
 		<div style={{display: 'flex', flexDirection: 'row', paddingLeft: "5px", background: `linear-gradient(90deg, #53105E, 40%, transparent)`, color: 'white'}}>
 			<Text>Подгруппа {item.pg}</Text>
 		</div> : ''}
+		
+		</div>}
         after={item.aud}
 		before={<Group style={{padding: "0 10px", display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
 			<Group style={{marginTop: '-11px'}}>
