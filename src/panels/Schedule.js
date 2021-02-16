@@ -97,7 +97,7 @@ const Schedule = props => {
 		<Group header={schedule ? <Header mode="secondary">Расписание загружено {prepareDate(schedule.updated)}</Header> : null}>
 		{schedule ? !isOdd ? schedule.even[currDateSched].length ?
 		schedule.even[currDateSched].map(item => { 
-			const type = /^Л$/gi.test(item.type) ? "Лекция" : /^лаб/gi.test(item.type) ? "Лабораторное занятие" : /^пр/gi.test(item.type) ? "Практическое занятие" : "Тип занятия не определён"
+			const type = /^Л$/gi.test(item.type) ? "Лекция" : /^лаб/gi.test(item.type) ? "Лабораторное занятие" : /^пр/gi.test(item.type) ? "Практическое занятие" : "Тип занятия не определён("+item.type+")"
 			const time = item.time.split('-')
 			const color = type == "Лекция" ? '#1fcecb' : type == "Лабораторное занятие" ? '#DB324D' : type == "Практическое занятие" ? "#3590F3" : "#C2BBF0"
 			
@@ -133,7 +133,7 @@ const Schedule = props => {
 		</Group> : 
 		schedule.odd[currDateSched].length ?
 		schedule.odd[currDateSched].map(item => { 
-			const type = /^Л$/gi.test(item.type) ? "Лекция" : /^лаб/gi.test(item.type) ? "Лабораторное занятие" : /^пр/gi.test(item.type) ? "Практическое занятие" : "Тип занятия не определён"
+			const type = /^Л$/gi.test(item.type) ? "Лекция" : /^лаб/gi.test(item.type) ? "Лабораторное занятие" : /^пр/gi.test(item.type) ? "Практическое занятие" : "Тип занятия не определён(" + item.type + ")"
 			const time = item.time.split('-')
 			const color = type == "Лекция" ? '#1fcecb' : type == "Лабораторное занятие" ? '#DB324D' : type == "Практическое занятие" ? "#3590F3" : "#C2BBF0"
 			return (<RichCell
