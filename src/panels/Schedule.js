@@ -106,9 +106,18 @@ const Schedule = props => {
         disabled
         multiline
         text={item.prep}
-        caption={<div style={{display: 'flex', flexDirection: 'row', paddingLeft: "10px", background: `linear-gradient(90deg, ${color}, 40%, transparent)`, color: 'white'}}>
+        caption={<div>
+		<div style={{display: 'flex', flexDirection: 'row', paddingLeft: "5px", background: `linear-gradient(90deg, ${color}, 40%, transparent)`, color: 'white'}}>
 			<Text>{type}</Text>
-		</div>}
+		</div>
+		{item.pg === null ? 
+		<div style={{display: 'flex', flexDirection: 'row', paddingLeft: "5px", background: `linear-gradient(90deg, #53105E, 40%, transparent)`, color: 'white'}}>
+			<Text>Не удалось определить подгруппу</Text>
+		</div> : ''}
+		{item.pg? 
+		<div style={{display: 'flex', flexDirection: 'row', paddingLeft: "5px", background: `linear-gradient(90deg, #53105E, 40%, transparent)`, color: 'white'}}>
+			<Text>Подгруппа {item.pg}</Text>
+		</div> : ''}
         after={item.aud}
 		before={<Group style={{padding: "0 10px", display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
 			<Group style={{marginTop: '-11px'}}>
