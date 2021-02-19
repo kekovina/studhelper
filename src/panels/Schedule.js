@@ -23,6 +23,8 @@ const Schedule = props => {
 	const [selectedSchedule, setSelectedSchedule] = useState(null)
 	var weeks = 0;
 	const now = new Date()
+	
+	const scheme = document.body.attributes.getNamedItem("scheme").value
 	const handler = type => {
 		if(type == "next"){
 			props.setPopout(null)
@@ -104,7 +106,7 @@ const Schedule = props => {
 				<div className="from">{subject.walk.from}</div>
 				<div>
 					<div className="str-time">5 мин.</div>
-					<div className="strelki" style={{display: 'block', textAlign: 'center'}}>
+					<div className={`strelki ${scheme == "space_gray" ? "" : "inverse"}`} style={{display: 'block', textAlign: 'center'}}>
 						<span> {">"} </span>
 						<span> {">"} </span>
 						<span> {">"} </span>
