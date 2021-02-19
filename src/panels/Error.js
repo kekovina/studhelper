@@ -33,7 +33,9 @@ function randomInteger(min, max) {
   }
 
 const Error = props => {
+    console.log(props)
     const sticker = stickers[props.err.type][randomInteger(0,stickers[props.err.type].length)]
+	const scheme = document.body.attributes.getNamedItem("scheme").value
 	return (<Panel id={props.id}>
 		<PanelHeader
 			left={<PanelHeaderButton onClick={props.go} data-to={props.err.back}>
@@ -44,7 +46,7 @@ const Error = props => {
             <div className="err-header">{props.err.type ? props.err.type == 1 ? props.err.name : "Внезапная ошибка" : "Сервер уснул"}</div>
             <div className="err-descr">{props.err.type ? props.err.descr : "Мы скоро всё обязательно починим"}</div>
             <div className="err-descr-sub">Пожалуйста, заскринь и сообщи <a href="http://vk.com/kekovinya">Антону</a> о произошедшем</div>
-            {props.err.code && <div className="err-body">{JSON.stringify(props.err.code)}</div>}
+            {props.err.code && <div className="err-body" style={{color: scheme == "space_gray" ? "" : "white"}}>{JSON.stringify(props.err.code)}</div>}
 	</Panel>);
     }
 
