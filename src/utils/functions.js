@@ -22,7 +22,9 @@ const getDate = (date= new Date(), offset = 0) => {
 	const createOffset = new Date(date.getTime() + offset * 24 * 60 * 60 * 1000);
 	const months = ["января", "февраля", "марта", "апреля", "мая", "июня", "июля", "августа", "сентября", "октября", "ноября", "декабря"]
 	const day = ['воскресение', 'понедельник', 'вторник', 'среда', 'четверг', 'пятница', 'суббота']
-	return {day: createOffset, text: `${createOffset.getDate()} ${months[createOffset.getMonth()]}, ${day[createOffset.getDay()]}`}
+	return {day: createOffset, 
+		text: `${createOffset.getDate()} ${months[createOffset.getMonth()]}, ${day[createOffset.getDay()]}`, 
+		mini: `${((createOffset.getDate()+'').length < 2 ? '0' : '')+createOffset.getDate()}.${(((createOffset.getMonth()+1)+'').length < 2 ? '0' : '')+(createOffset.getMonth()+1)}.${createOffset.getFullYear()}`}
 }
 const getWeek = (date = new Date()) => {
 	const numDay = date.getDay()

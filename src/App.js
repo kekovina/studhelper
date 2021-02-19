@@ -35,22 +35,7 @@ const App = () => {
 			schemeAttribute.value = data.scheme ? data.scheme : 'client_light';
 			document.body.attributes.setNamedItem(schemeAttribute);
 		}
-		if( type == "VKWebAppAllowNotificationsResult"){
-			if(data.result){
-				bridge.send('VKWebAppGetUserInfo').then(res => bridge.send("VKWebAppCallAPIMethod", {
-					"method": "notifications.sendMessage",
-					"request_id": "1212",
-					"params": {
-						"user_ids": res.id,
-						"message": "Тестовое уведомление. Я рад, что ты с нами!",
-						"access_token":"2c47d1312c47d1312c47d131972c32608422c472c47d13173add6862d3b4b7516945aba",
-						"v":"5.130"
-					}
-				}).then(res => console.info(res)))
-				.catch(e => console.info(e.error_data))
-				
-			}
-		}
+		
 	});
 	const createError = (obj) => {
 		setError({...error, ...obj})
@@ -81,21 +66,37 @@ const App = () => {
 			})
 			return id
 		}
-		fetchData().then(getUser).then((id) => {
-			bridge.send("VKWebAppCallAPIMethod", {
-				"method": "apps.isNotificationsAllowed",
-				"request_id": "1212",
-				"params": {
-					"user_id": id,
-					"access_token":"2c47d1312c47d1312c47d131972c32608422c472c47d13173add6862d3b4b7516945aba",
-					"v":"5.130"
-				}
-			}).then(resp => {
-				if(!resp.isAllowed){
-					bridge.send("VKWebAppAllowNotifications")
-				}
-			}).catch(e => console.log(e.error_data))
-		})
+		fetchData().then(getUser)
+		// .then((id) => {
+		// 	bridge.send("VKWebAppCallAPIMethod", {
+		// 		"method": "apps.isNotificationsAllowed",
+		// 		"request_id": "1212",
+		// 		"params": {
+		// 			"user_id": id,
+		// 			"access_token":"2c47d1312c47d1312c47d131972c32608422c472c47d13173add6862d3b4b7516945aba",
+		// 			"v":"5.130"
+		// 		}
+		// 	}).then(resp => {
+		// 		console.info(resp)
+		// 		if(!resp.isAllowed){
+		// 			bridge.send("VKWebAppAllowNotifications").then(d => {
+		// 				if(d.result){
+		// 					bridge.send('VKWebAppGetUserInfo').then(res => bridge.send("VKWebAppCallAPIMethod", {
+		// 						"method": "notifications.sendMessage",
+		// 						"request_id": "1212",
+		// 						"params": {
+		// 							"user_ids": res.id,
+		// 							"message": "Тестовое уведомление. Я рад, что ты с нами!",
+		// 							"access_token":"2c47d1312c47d1312c47d131972c32608422c472c47d13173add6862d3b4b7516945aba",
+		// 							"v":"5.130"
+		// 						}
+		// 					}).then(res => console.info(res)))
+		// 					.catch(e => console.info(e.error_data))
+		// 				}
+		// 			})
+		// 		}
+		// 	}).catch(e => console.log(e.error_data))
+		// })
 	}, []);
 
 	const go = e => {

@@ -12,13 +12,15 @@ import { getDate, prepareDate, getWeek } from '../utils/functions'
 import axios from 'axios'
 import HorizontalCalendar from 'vkui-horizontal-calendar';
 
+
+import './Schedule.css';
+
 const osName = platform();
 
 const Schedule = props => {
-	const [currDate, setCurrDate] = useState(getDate);
-	const [isOdd, setIsOdd] = useState(false)
-	const [currDateSched, setCurrDateSched] = useState(null)
+	const [selectedDate, setSelectedDate] = useState(getDate);
 	const [schedule, setSchedule] = useState(null)
+	const [selectedSchedule, setSelectedSchedule] = useState(null)
 	var weeks = 0;
 	const now = new Date()
 	const handler = type => {
@@ -26,12 +28,8 @@ const Schedule = props => {
 			props.setPopout(null)
 			openSelector()
 			weeks+=1
-			setIsOdd(!isOdd)
-			console.log('next')
 		} else {
-			setCurrDate(type)
-			setCurrDateSched(type.day.getDay())
-			setIsOdd(isOddWeek(type.day))
+			setSelectedDate(type)
 		}
 	}
 	const getSchedule = () => {
@@ -46,10 +44,13 @@ const Schedule = props => {
 			props.setPopout(null)
 		})
 	}
-	const isOddWeek = (date = new Date()) => {
-		var onejan = new Date(date.getFullYear(), 0, 1);		
-		return !(Math.ceil((((date - onejan) / 86400000) + onejan.getDay() + 1) / 7) % 2);
-	}
+	Date.prototype.getWeek = function() {
+        var onejan = new Date(this.getFullYear(), 0, 1);
+		if(this.getDay() == 6){
+			return Math.ceil((((this - onejan - 24*60*60*1000) / 86400000) + onejan.getDay() + 1) / 7);
+		}
+        return Math.ceil((((this - onejan) / 86400000) + onejan.getDay() + 1) / 7);
+    }
 	const openSelector = () => {
 		const popout = (<ActionSheet 
         onClose={() => props.setPopout(null)}
@@ -57,11 +58,11 @@ const Schedule = props => {
       >
 	{
 			getWeek(new Date(now.getTime()+weeks*7*24*60*60*1000)).map((i,index) => {
-			var {day, text} = getDate(i);
+			var {day, text, mini} = getDate(i);
 			if(!day.getDay()){
 				return 
 			}
-			return (<ActionSheetItem autoclose onClick={handler.bind(this, {text: text, day: day})} subtitle="Авто" mode={day.getDate() == currDate.day.getDate() ? 'cancel' : 'default'}>
+			return (<ActionSheetItem autoclose onClick={handler.bind(this, {text, day, mini})} subtitle="Авто" mode={day.getDate() == selectedDate.day.getDate() ? 'cancel' : 'default'}>
         	{day.getDate() == new Date(now.getTime()+24*60*60*1000).getDate() ? "завтра" : day.getDate() == now.getDate() ?  "сегодня" : text}
         </ActionSheetItem>)
 		})}
@@ -73,10 +74,13 @@ const Schedule = props => {
 		weeks+=1
 	}
 	useEffect(() => {
-		setIsOdd(isOddWeek())
 		getSchedule()
-		setCurrDateSched(new Date().getDay())
 	}, []);
+	useEffect(() => {
+		if(schedule){
+			setSelectedSchedule(schedule.data.filter(item => item.date == selectedDate.mini)[0]?.schedule || null)
+		}
+	},[schedule, selectedDate])
 	return (<Panel id={props.id}>
 		<PanelHeader
 			left={<PanelHeaderButton onClick={props.go} data-to="home">
@@ -85,46 +89,49 @@ const Schedule = props => {
 		>
 			Расписание
 		</PanelHeader>
-		{/* <HorizontalCalendar
-	choosed={choosed}
-	onClick={({ choosedDay, dayNumber }) => {
-		setChoosed(dayNumber);
-		
-	}}/> */}
-		<Group header={<Header mode="primary">{currDate.text}. {isOdd ? 'Нечётная неделя' : 'Чётная неделя'}</Header>}>
+		<Group header={<Header mode="primary">{selectedDate.text}. {selectedDate.day.getWeek() % 2 ? "Чётная" : "Нечётная"} неделя</Header>}>
 			<CellButton onClick={openSelector}> Выбрать другую дату</CellButton>
 		</Group>
 		<Group header={schedule ? <Header mode="secondary">Расписание загружено {prepareDate(schedule.updated)}</Header> : null}>
-		{schedule ? !isOdd ? schedule.even[currDateSched].length ?
-		schedule.even[currDateSched].map(item => { 
-			const type = /^Л$/gi.test(item.type) ? "Лекция" : /^лаб/gi.test(item.type) ? "Лабораторное занятие" : /^пр/gi.test(item.type) ? "Практическое занятие" : "Тип занятия не определён("+item.type+")"
-			const time = item.time.split('-')
-			const color = type == "Лекция" ? '#1fcecb' : type == "Лабораторное занятие" ? '#DB324D' : type == "Практическое занятие" ? "#3590F3" : "#C2BBF0"
-			
-			return (<RichCell
-		style={(now.getDate() >= currDate.day.getDate()) && (`${((now.getHours()+'').length < 2 ? '0' : '')+now.getHours()}:${((now.getMinutes()+'').length < 2 ? '0' : '')+now.getMinutes()}` > time[1]) ? {opacity: '.4'} : {}}
+		
+		{selectedSchedule && selectedSchedule.map(subject => {
+			const color = subject.type == "Лекция" ? '#1fcecb' : subject.type == "Лабораторное занятие" ? '#DB324D' : subject.type == "Практическое занятие" ? "#3590F3" : "#C2BBF0"
+
+			return (
+		<Group>
+		{subject.walk &&
+		(<div className="walkblock" style={((now.getDate() >= selectedDate.day.getDate()) && (`${((now.getHours()+'').length < 2 ? '0' : '')+now.getHours()}:${((now.getMinutes()+'').length < 2 ? '0' : '')+now.getMinutes()}` > subject.end)) || (now.getDate() >= selectedDate.day.getDate()) ? {opacity: '.4'} : {}}>
+				<div className="from">{subject.walk.from}</div>
+				<div>
+					<div className="str-time">5 мин.</div>
+					<div className="strelki" style={{display: 'block', textAlign: 'center'}}>
+						<span> {">"} </span>
+						<span> {">"} </span>
+						<span> {">"} </span>
+					</div>
+				</div>
+				<div className="to">{subject.walk.to}</div>
+		</div>)}
+		<RichCell
+		style={((now.getDate() >= selectedDate.day.getDate()) && (`${((now.getHours()+'').length < 2 ? '0' : '')+now.getHours()}:${((now.getMinutes()+'').length < 2 ? '0' : '')+now.getMinutes()}` > subject.end)) || (now.getDate() >= selectedDate.day.getDate()) ? {opacity: '.4'} : {}}
         disabled
         multiline
-        text={item.prep}
+        text={subject.prep}
         caption={<div>
 		<div style={{display: 'flex', flexDirection: 'row', paddingLeft: "5px", background: `linear-gradient(90deg, ${color}, 40%, transparent)`, color: 'white'}}>
-			<Text>{type}</Text>
+			<Text>{subject.type || "Тип не определён"}</Text>
 		</div>
-		{item.pg === null ? 
+		{subject.pg ? 
 		<div style={{display: 'flex', flexDirection: 'row', paddingLeft: "5px", background: `linear-gradient(90deg, #53105E, 40%, transparent)`, color: 'white'}}>
-			<Text>Не удалось определить подгруппу</Text>
-		</div> : ''}
-		{item.pg? 
-		<div style={{display: 'flex', flexDirection: 'row', paddingLeft: "5px", background: `linear-gradient(90deg, #53105E, 40%, transparent)`, color: 'white'}}>
-			<Text>Подгруппа {item.pg}</Text>
+			<Text>Подгруппа {subject.pg}</Text>
 		</div> : ''}
 		
 		</div>}
-        after={item.aud}
+        after={subject.aud}
 		before={<Group style={{padding: "0 10px", display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
 			<Group style={{marginTop: '-11px'}}>
-				<Text weight="medium">{time[0]}</Text>
-				<Text weight="medium" style={{marginTop: '2px'}}>{time[1]}</Text>
+				<Text weight="medium">{subject.start}</Text>
+				<Text weight="medium" style={{marginTop: '2px'}}>{subject.end}</Text>
 			</Group>
 			{/* <Avatar shadow={false} style={{boxShadow:  type == "Лекция" ? '0 0 15px #1fcecb' : type == "Лабораторное занятие" ? '0 0 15px #DB324D' : type == "Практическое занятие" ? "0 0 15px #3590F3" : "0 0 15px #C2BBF0", marginTop: '5px',
 			background: type == "Лекция" ? '#1fcecb' : type == "Лабораторное занятие" ? '#DB324D' : type == "Практическое занятие" ? "#3590F3" : "#C2BBF0", marginTop: '5px'}} size={24}>{item.num}</Avatar> */}
@@ -136,59 +143,16 @@ const Schedule = props => {
         //   </React.Fragment>
         // }
       >
-	  {item.subj}
-	  </RichCell>
-		)}) : <Group style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
-			<Icon44SmileOutline 	width={100} height={100} style={{color: '#aaa'}}/>
-			<Text weight="medium" style={{fontSize: '18px', color: "#aaa", textTransform: 'uppercase', marginTop: "10px"}}>Расписания на сегодня нет</Text>
-		</Group> : 
-		schedule.odd[currDateSched].length ?
-		schedule.odd[currDateSched].map(item => { 
-			const type = /^Л$/gi.test(item.type) ? "Лекция" : /^лаб/gi.test(item.type) ? "Лабораторное занятие" : /^пр/gi.test(item.type) ? "Практическое занятие" : "Тип занятия не определён(" + item.type + ")"
-			const time = item.time.split('-')
-			const color = type == "Лекция" ? '#1fcecb' : type == "Лабораторное занятие" ? '#DB324D' : type == "Практическое занятие" ? "#3590F3" : "#C2BBF0"
-			return (<RichCell
-		style={(now.getDate() >= currDate.day.getDate()) && (`${((now.getHours()+'').length < 2 ? '0' : '')+now.getHours()}:${((now.getMinutes()+'').length < 2 ? '0' : '')+now.getMinutes()}` > time[1]) ? {opacity: '.4'} : {}}
-        disabled
-        multiline
-        text={item.prep}
-		before={<Group style={{padding: "0 10px", display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
-			<Group style={{marginTop: '-11px'}}>
-				<Text weight="medium">{time[0]}</Text>
-				<Text weight="medium" style={{marginTop: '2px'}}>{time[1]}</Text>
-			</Group>
-			</Group>}
-		// before={<Avatar shadow={false} style={{background: 'red'}} size={28}>{item.num}</Avatar>}
-        caption={<div>
-		<div style={{display: 'flex', flexDirection: 'row', paddingLeft: "5px", background: `linear-gradient(90deg, ${color}, 40%, transparent)`, color: 'white'}}>
-			<Text>{type}</Text>
-		</div>
-		{item.pg === null ? 
-		<div style={{display: 'flex', flexDirection: 'row', paddingLeft: "5px", background: `linear-gradient(90deg, #53105E, 40%, transparent)`, color: 'white'}}>
-			<Text>Не удалось определить подгруппу</Text>
-		</div> : ''}
-		{item.pg? 
-		<div style={{display: 'flex', flexDirection: 'row', paddingLeft: "5px", background: `linear-gradient(90deg, #53105E, 40%, transparent)`, color: 'white'}}>
-			<Text>Подгруппа {item.pg}</Text>
-		</div> : ''}
-		
-		</div>}
-        after={item.aud}
-        // actions={
-        //   <React.Fragment>
-        //     <Button>Сходить</Button>
-        //     <Button mode="secondary">Прогулять</Button>
-        //   </React.Fragment>
-        // }
-      >
-	  {item.subj}
-	  </RichCell>
-		)}) : 
+	  {subject.subj}
+	  </RichCell></Group>)})}
+	  {!selectedSchedule && (
 		<Group style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
 			<Icon44SmileOutline 	width={100} height={100} style={{color: '#aaa'}}/>
 			<Text weight="medium" style={{fontSize: '18px', color: "#aaa", textTransform: 'uppercase', marginTop: "10px"}}>Расписания на сегодня нет</Text>
 		</Group>
-		: null}
+	  )}
+		
+
 		</Group>
 	</Panel>)
 }
