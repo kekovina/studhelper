@@ -1,0 +1,26 @@
+.news-wraper{
+    background-color: #d7d8d9;
+    border-radius: 10px;
+    margin: 10px 0;
+}
+.image-wraper img{
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    width: 100%
+}
+.news-content{
+    padding: 10px 15px
+}
+.news-wraper.dark{
+    background-color: #384452;
+}
+.news-text{
+    padding: 5px 0;
+    font-size: 16px;
+}
+.news-time{
+    font-size: 10px;
+    padding: 5px 0;
+    text-transform: uppercase;
+    color: #7c7c7c
+}

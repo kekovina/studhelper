@@ -3,18 +3,24 @@ const prepareDate = date => {
 	const now = new Date(new Date().getTime())
 	const hours = Math.floor((now-updated)/60/60/1000)
 	const months = ["января", "февраля", "марта", "апреля", "мая", "июня", "июля", "августа", "сентября", "октября", "ноября", "декабря"]
-	console.log(hours)
-	if(hours > 8){
-		return `${updated.getDate()} ${months[updated.getMonth()]} ${updated.getFullYear()} в ${((updated.getHours()+'').length < 2 ? '0' : '')+updated.getHours()}:${((updated.getMinutes()+'').length < 2 ? '0' : '')+updated.getMinutes()}`
-	} else {
+	if(hours < 8){
 		const minutes = Math.floor((now-updated)/60/1000)
-		if(minutes < 2 && !hours){
+		if(minutes < 5 && !hours){
 			return `только что`
 		}
 		if(!hours){
 			return `${minutes} мин. назад` 
 		} else {
 			return `${hours} ч. назад`
+		}
+	} else {
+		if(now.getDate() == updated.getDate()){
+			return `сегодня в ${((updated.getHours()+'').length < 2 ? '0' : '')+updated.getHours()}:${((updated.getMinutes()+'').length < 2 ? '0' : '')+updated.getMinutes()}`
+		} else if((now.getDate() - 1) == updated.getDate()){
+			return `вчера в ${((updated.getHours()+'').length < 2 ? '0' : '')+updated.getHours()}:${((updated.getMinutes()+'').length < 2 ? '0' : '')+updated.getMinutes()}`
+		} else {
+			return `${updated.getDate()} ${months[updated.getMonth()]} ${updated.getFullYear()} в ${((updated.getHours()+'').length < 2 ? '0' : '')+updated.getHours()}:${((updated.getMinutes()+'').length < 2 ? '0' : '')+updated.getMinutes()}`
+
 		}
 	}
 }

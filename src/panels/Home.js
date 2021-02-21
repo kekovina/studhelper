@@ -7,6 +7,7 @@ import Group from '@vkontakte/vkui/dist/components/Group/Group';
 import Cell from '@vkontakte/vkui/dist/components/Cell/Cell';
 import Div from '@vkontakte/vkui/dist/components/Div/Div';
 import Avatar from '@vkontakte/vkui/dist/components/Avatar/Avatar';
+import { CellButton, Link } from '@vkontakte/vkui'
 import { Icon16ClockOurline, Icon20EducationOutline, Icon20NewsfeedOutline, Icon24Settings, Icon20ServicesOutline } from '@vkontakte/icons'
 
 const admins = [503012833]
@@ -37,15 +38,20 @@ const Home = ({ id, go, fetchedUser, appUser }) => (
             <Cell expandable before={<Icon20EducationOutline width={28}/>} onClick={go} data-to="progress">
               Успеваемость
             </Cell>
-            <Cell expandable before={<Icon20NewsfeedOutline width={28}/>} onClick={() => {}}>
+            <Cell expandable before={<Icon20NewsfeedOutline width={28}/>} onClick={go} data-to="news">
               Новости
             </Cell>
         
 		</Group>
 		<Group>
-		<Cell expandable before={<Icon24Settings width={28}/>} onClick={go} data-to="settings">
+			<Cell expandable before={<Icon24Settings width={28}/>} onClick={go} data-to="settings">
               Настройки
             </Cell>
+		</Group>
+		<Group >
+			<Link href="https://vk.com/public202317653">
+				<CellButton>Сообщество приложения</CellButton>
+			</Link>
 		</Group>
 	</Panel>
 );

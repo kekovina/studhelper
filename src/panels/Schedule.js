@@ -68,7 +68,7 @@ const Schedule = props => {
         	{day.getDate() == new Date(now.getTime()+24*60*60*1000).getDate() ? "завтра" : day.getDate() == now.getDate() ?  "сегодня" : text}
         </ActionSheetItem>)
 		})}
-		{(weeks < 4 && <ActionSheetItem autoclose onClick={handler.bind(this, "next")} subtitle="Авто">
+		{(weeks < 2 && <ActionSheetItem autoclose onClick={handler.bind(this, "next")} subtitle="Авто">
         	Другие даты
         </ActionSheetItem>)}
       </ActionSheet>)
@@ -91,13 +91,13 @@ const Schedule = props => {
 		>
 			Расписание
 		</PanelHeader>
-		<Group header={<Header mode="primary">{selectedDate.text}. {selectedDate.day.getWeek() % 2 ? "Чётная" : "Нечётная"} неделя</Header>}>
+		<Group header={<Header mode="primary">{selectedDate.text}. {selectedDate.day.getDay() ? `${selectedDate.day.getWeek() % 2 ? "Чётная" : "Нечётная"} неделя` : ''}</Header>}>
 			<CellButton onClick={openSelector}> Выбрать другую дату</CellButton>
 		</Group>
 		<Group header={schedule ? <Header mode="secondary">Расписание загружено {prepareDate(schedule.updated)}</Header> : null}>
 		
 		{selectedSchedule && selectedSchedule.map(subject => {
-			const color = subject.type == "Лекция" ? '#1fcecb' : subject.type == "Лабораторное занятие" ? '#DB324D' : subject.type == "Практическое занятие" ? "#3590F3" : "#C2BBF0"
+			const color = /лекц/gi.test(subject.type) ? '#1fcecb' : /лаб/gi.test(subject.type) ? '#DB324D' : /практ/gi.test(subject.type) ? "#3590F3" : "#C2BBF0"
 
 			return (
 		<Group>
@@ -150,7 +150,7 @@ const Schedule = props => {
 	  {!selectedSchedule && (
 		<Group style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
 			<Icon44SmileOutline 	width={100} height={100} style={{color: '#aaa'}}/>
-			<Text weight="medium" style={{fontSize: '18px', color: "#aaa", textTransform: 'uppercase', marginTop: "10px"}}>Расписания на сегодня нет</Text>
+			<Text weight="medium" style={{fontSize: '18px', color: "#aaa", textTransform: 'uppercase', marginTop: "10px"}}>Расписания на этот день нет</Text>
 		</Group>
 	  )}
 		

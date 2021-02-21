@@ -16,6 +16,7 @@ import Progress from './panels/Progress'
 import Start from './panels/Start'
 import DetailedProgress from './panels/DetailedProgress'
 import Error from './panels/Error'
+import News from './panels/News'
 import AdminMenu from './panels/AdminMenu'
 import LastVisit from './panels/admin/LastVisit'
 import { MODAL_CHANGE_GROUP, MODAL_CHANGE_NUM } from './utils/modals.js'
@@ -249,7 +250,8 @@ const App = () => {
 			<DetailedProgress id="detailedprogress" go={go} data={detailed}/>
 			<Error id='error' err={error} go={go}/>
 			<Progress id="progress" go={go} createError={createError} setPopout={setPopout} appUser={appUser} setDetailed={setDetailed} progress={progress} setProgress={setProgress}/>
-			
+			<News id="news" go={go} />
+
 			<AdminMenu id="adminMenu" go={go} />
 			<LastVisit id="lastVisit" go={go} setPopout={setPopout}/>
 		</View>
