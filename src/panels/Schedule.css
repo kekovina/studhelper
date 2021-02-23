@@ -80,4 +80,14 @@
     animation: inverse 2s infinite;
     animation-delay: 1.34s
   }
-  
+  .harryup{
+    animation: text 1s infinite;
+    animation-timing-function: ease;
+    animation-direction: alternate;
+    color: red
+  }
+  @keyframes text{
+    100%{
+      text-shadow: 0 0 20px red
+    }
+  }

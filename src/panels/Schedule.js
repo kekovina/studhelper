@@ -105,7 +105,7 @@ const Schedule = props => {
 		(<div className="walkblock" style={((now.getDate() >= selectedDate.day.getDate()) && (`${((now.getHours()+'').length < 2 ? '0' : '')+now.getHours()}:${((now.getMinutes()+'').length < 2 ? '0' : '')+now.getMinutes()}` > subject.end)) || (now.getDate() >= selectedDate.day.getDate()) ? {opacity: '.4'} : {}}>
 				<div className="from">{subject.walk.from}</div>
 				<div>
-					<div className="str-time">5 мин.</div>
+					{subject.walk.time && <div className={`str-time {subject.walk.time > 9 ? 'harryup' : null}`}>{subject.walk.time} мин.</div>}
 					<div className={`strelki ${scheme == "space_gray" ? "" : "inverse"}`} style={{display: 'block', textAlign: 'center'}}>
 						<span> {">"} </span>
 						<span> {">"} </span>
@@ -115,7 +115,7 @@ const Schedule = props => {
 				<div className="to">{subject.walk.to}</div>
 		</div>)}
 		<RichCell
-		style={((now.getDate() >= selectedDate.day.getDate()) && (`${((now.getHours()+'').length < 2 ? '0' : '')+now.getHours()}:${((now.getMinutes()+'').length < 2 ? '0' : '')+now.getMinutes()}` > subject.end)) || (now.getDate() >= selectedDate.day.getDate()) ? {opacity: '.4'} : {}}
+		style={((now.getDate() >= selectedDate.day.getDate()) && (`${((now.getHours()+'').length < 2 ? '0' : '')+now.getHours()}:${((now.getMinutes()+'').length < 2 ? '0' : '')+now.getMinutes()}` > subject.end)) || ((now.getDate() >= selectedDate.day.getDate()) && (`${((now.getHours()+'').length < 2 ? '0' : '')+now.getHours()}:${((now.getMinutes()+'').length < 2 ? '0' : '')+now.getMinutes()}` > subject.end)) ? {opacity: '.4'} : {}}
         disabled
         multiline
         text={subject.prep}
