@@ -15,7 +15,9 @@
     box-shadow: 7px 7px 15px #0F0F10, -7px -7px 15px #262627;
     border: 1px solid #19191A;
 }
-
+.updated{
+    font-family: "Roboto";
+}
 .alesha_card.fine{
     border: 1px solid #34E145;
 }
