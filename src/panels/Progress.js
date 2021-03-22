@@ -26,34 +26,32 @@ const osName = platform();
 
 
 const Progress = ({ setPopout, go, id, appUser, progress, setProgress, createError }) => {
-	// const [ subjects, setSubjects ] = useState(null)
-	const [ error, setError ] = useState(null)
 	const [ activeTerm, setActiveTerm ] = useState(null)
 	const [ ok, setOk ] = useState(false)
 
 	const scheme = document.body.attributes.getNamedItem("scheme").value
-
+	const getProgress = () => {
+		setPopout(<ScreenSpinner size='large' />)
+		axios.get(`https://tsu-helper-server.herokuapp.com/getProgress?num=${appUser.num}`)
+			.then(res => {
+				if(!res.data.err){
+					setProgress(res.data)
+				} else {
+					createError({type: 1, descr: res.data.text || "Сервер не вернул данные", name: "Ошибка запроса", code: res.data, back: 'home'})
+				}
+			})
+			.then(
+				setPopout(null)
+				)
+			.catch(e => {
+				createError({type: 2, descr: "Что-то пошло не так", name: "Внезапная ошибка", code: e, back: 'home'})
+				setPopout(null)
+			} )
+	}
 	useEffect(() => {
 		
 		if(!progress){
-			setPopout(<ScreenSpinner size='large' />)
-			axios.get(`https://tsu-helper-server.herokuapp.com/getProgress?num=${appUser.num}`)
-			.then(json => {
-				if(!json.data){
-					createError({type: 1, descr: "Сервер не вернул данные", name: "Пустой ответ", code: json.status + ' ' + json.statusText, back: 'home'})
-				}
-				if(!json.data.err){
-					setProgress(json.data)
-					setOk(!ok)
-				} else {
-					createError({type: 1, descr: json.data.text, name: "Ошибка запроса", code: json.data, back: 'home'})
-				}
-			})
-			.then(() => setPopout(null))
-			.catch((e) => {
-				createError({type: 2, descr: "Что-то пошло не так", name: "Внезапная ошибка", code: e, back: 'home'})
-				setPopout(null)
-			})
+			getProgress()
 	}
 	},[])
 	return (
@@ -66,7 +64,7 @@ const Progress = ({ setPopout, go, id, appUser, progress, setProgress, createErr
 			Моя зачётка
 		</PanelHeader>
 		{ progress && <div className="updated">Обновлено {prepareDate(progress.cacheTime)}</div> }
-		{progress && progress.doc.map((item, term) => {
+		{progress && progress.res.map((item, term) => {
 			return <Accordeon theme={mainStore.theme} title={`Семестр ${term+1}`} active={activeTerm} setActive={setActiveTerm}>
 				{item.map(i => <AleshaCard onClick={ i.km==0 ? null : go } data-to="detailedprogress" data-km={JSON.stringify({...i, term: term})} data={i}/>)}
 			</Accordeon>

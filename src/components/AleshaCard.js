@@ -3,7 +3,6 @@ import mainStore from '../store/mainStore';
 import './aleshacard.css';
 
 export default function CustomCard({ data }) {
-    console.log(data)
     let t = "customcard "
     let d = ""
     let points = 0
@@ -139,7 +138,7 @@ export default function CustomCard({ data }) {
     }
     return (<div className={`alesha_card ${t} ${mainStore.theme}`}>
         <div className="top">
-            <div className="subj">{data.name}</div>
+            <div className="subj">{data.name.length > 60 ? data.name.slice(0,60)+"..." : data.name}</div>
             <div className="type">{d}</div>
         </div>
         <div className="line line1"></div>

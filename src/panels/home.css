@@ -1,0 +1,70 @@
+.userbar{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin: 10px 15px;
+    padding: 10px 15px;
+    background: #EEEEEE;
+    border-radius: 20px
+}
+.userbar.dark{
+    background: #242424;
+    color: white
+}
+.userinfo{
+    margin-left: 15px;
+}
+.username{
+    font-weight: 400;
+    font-size: 22px
+}
+.group{
+    font-weight: 300;
+    font-size: 12px
+}
+.btn-group{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 365px;
+    margin: 30px auto;
+}
+.btn{
+    background: #F9F9F9;
+    box-shadow: 12px 12px 20px #CECEEC, -12px -12px 20px #FFFFFF;
+    border-radius: 20px;
+    width: 160px;
+    height: 160px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 10px;
+    color: black;
+    font-size: 18px
+}
+.btn-group.dark .btn{
+    background: #19191A;
+    box-shadow: 7px 7px 15px #0F0F10, -7px -7px 15px #262627;
+    color: white
+}
+/* .btn.news{
+    width: 100%;
+} */
+.btn img{
+    margin-bottom: 15px;
+}
+.btn.admin{
+    background-color: #ff9f79
+}
+.btn-group.dark .btn.admin{
+    background-color:#2d2d2e
+}
+.btn.link{
+    text-decoration: none;
+    background-color: #b0ffe7;
+}
+.btn-group.dark .btn.link{
+    text-decoration: none;
+    background-color: #2d2d2e;
+}
