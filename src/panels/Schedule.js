@@ -12,6 +12,7 @@ import { getDate, prepareDate, getWeek } from '../utils/functions'
 import axios from 'axios'
 import SubjectBase from '../components/SubjectBase'
 import Alesha from '../components/Alesha'
+import mainStore from '../store/mainStore'
 
 import './Schedule.css';
 
@@ -60,7 +61,7 @@ const Schedule = props => {
     }
 	const openSelector = () => {
 		const popout = (<ActionSheet 
-        onClose={() => props.setPopout(null)}
+        onClose={props.setPopout.bind(this, null)}
         iosCloseItem={<ActionSheetItem autoclose mode="cancel">Отменить</ActionSheetItem>}
       >
 	{
@@ -96,18 +97,12 @@ const Schedule = props => {
 		>
 			Расписание
 		</PanelHeader>
-		<Group header={<Header mode="primary">{selectedDate.text}. {selectedDate.day.getDay() ? `${selectedDate.day.getWeek() % 2 ? "Чётная" : "Нечётная"} неделя` : ''}</Header>}>
-			<CellButton onClick={openSelector}> Выбрать другую дату</CellButton>
-		</Group>
+		<div className="selected_date">{selectedDate.text}. {selectedDate.day.getDay() ? `${selectedDate.day.getWeek() % 2 ? "Чётная" : "Нечётная"} неделя` : ''}</div>
+		<div className="changewrap">
+			<button onClick={openSelector} className={`changedate ${mainStore.theme}`}>Выбрать другую дату</button>
+		</div>
 		<Group header={schedule ? <Header mode="secondary">Расписание загружено {prepareDate(schedule.updated)}</Header> : null}>
-		{selectedSchedule && selectedSchedule.map(subject => {
-			switch(props.appUser.themeSched){
-				case 1:
-					return <Alesha subject={subject} selectedDate={selectedDate}/>
-				default:
-					return <SubjectBase subject={subject} selectedDate={selectedDate}/>
-			}
-		})}
+		{selectedSchedule && selectedSchedule.map(subject => <Alesha subject={subject} selectedDate={selectedDate}/>)}
 	  {!selectedSchedule && (
 		<Group style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
 			<Icon44SmileOutline 	width={100} height={100} style={{color: '#aaa'}}/>

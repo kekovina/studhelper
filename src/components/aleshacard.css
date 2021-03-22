@@ -1,0 +1,115 @@
+.alesha_card{
+    margin: 15px 10px;
+    padding: 10px;
+    width: 130px;
+    height: 130px;
+    border-radius: 16px;
+    background: #F9F9F9;
+    border: 1px solid #F9F9F9;
+    box-shadow: 12px 12px 20px #CECEEC, -12px -12px 20px #FFFFFF;
+    position: relative;
+    font-family: "Roboto";
+}
+.alesha_card.dark{
+    background: #19191A;
+    box-shadow: 7px 7px 15px #0F0F10, -7px -7px 15px #262627;
+    border: 1px solid #19191A;
+}
+
+.alesha_card.fine{
+    border: 1px solid #34E145;
+}
+.alesha_card.good{
+    border: 1px solid #34B8E1;
+}
+.alesha_card.bad{
+    border: 1px solid #E7AB38;
+}
+.alesha_card.empty{
+    border: 1px solid #c7c7c7;
+}
+.alesha_card.fail{
+    border: 1px solid #C94B3A;
+}
+.subj{
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 15px;
+}
+.type{
+    color: rgba(0, 0, 0, 0.38);
+    font-size: 12px;
+    text-transform: lowercase;
+    line-height: 18px;
+    font-weight: 300;
+}
+.line{
+    position: absolute;
+    height: 1px;
+    width: 100%;
+    background-color: red;
+}
+.line.line1{
+    bottom: 30px;
+    left: 0;
+}
+.line.line2{
+    bottom: 25px;
+    left: 0;
+}
+.line.line3{
+    bottom: 20px;
+    left: 0;
+}
+.points{
+    position: absolute;
+    bottom: 11px;
+    left: 50%;
+    width: 50px;
+    margin-left: -25px;
+    font-size: 24px;
+    background-color: #F9F9F9;
+    text-align: center;
+}
+.alesha_card.dark .points{
+    background-color: #19191A;
+}
+.alesha_card.dark .type{
+    color: rgba(255, 255, 255, 0.38);
+}
+.alesha_card.fine .line{
+    background-color: #34E145;
+}
+.alesha_card.good .line{
+    background-color: #34B8E1;
+}
+.alesha_card.bad .line{
+    background-color: #E7AB38;
+}
+.alesha_card.fail .line{
+    background-color: #C94B3A;
+}
+.alesha_card.empty .line{
+    background-color: #c7c7c7;
+}
+
+.alesha_card.fine .points{
+    color: #34E145;
+    text-shadow: 0px 1px 10px #34E145;
+}
+.alesha_card.good .points{
+    color: #34B8E1;
+    text-shadow: 0px 1px 10px #34B8E1;
+}
+.alesha_card.bad .points{
+    color: #E7AB38;
+    text-shadow: 0px 1px 10px #E7AB38;
+}
+.alesha_card.fail .points{
+    color: #C94B3A;
+    text-shadow: 0px 1px 10px #C94B3A;
+}
+.alesha_card.empty .points{
+    color: #c7c7c7;
+    text-shadow: 0px 1px 10px #c7c7c7;
+}

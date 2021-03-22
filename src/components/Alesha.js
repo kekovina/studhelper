@@ -1,5 +1,6 @@
 import React from 'react';
 import {Group, RichCell, Text} from '@vkontakte/vkui';
+import mainStore from '../store/mainStore'
 
 import './alesha.css';
 
@@ -9,7 +10,7 @@ export default function Alesha({ subject, selectedDate }){
         const color = /лекц/gi.test(subject.type) ? 'lec' : /лаб/gi.test(subject.type) ? "lab" : /практ/gi.test(subject.type) ? "pract" : "empty"
 		const visible = ((`${((now.getHours()+'').length < 2 ? '0' : '')+now.getHours()}:${((now.getMinutes()+'').length < 2 ? '0' : '')+now.getMinutes()}` > subject.end) && now.getDate() == selectedDate.day.getDate()) || ((now > selectedDate.day) && selectedDate.day.getDate() != now.getDate())
 		return (
-			<div className="subject">
+			<div className={`subject ${mainStore.theme}`}>
 				<div className="left">
 					<div className="start">{subject.start}</div>
 					<div className="end">{subject.end}</div>
@@ -19,6 +20,7 @@ export default function Alesha({ subject, selectedDate }){
 					<div className="subj">{subject.subj}</div>
 					<div className="prep">{subject.prep}</div>
 					<div className={`type ${color}`}>{subject.type}</div>
+					{subject.pg && <div className={`pg`}>Подгруппа {subject.pg}</div>}
 				</div>
 			</div>
 		)

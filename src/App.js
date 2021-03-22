@@ -25,9 +25,11 @@ import LastVisit from './panels/admin/LastVisit'
 import { MODAL_CHANGE_GROUP, MODAL_CHANGE_NUM, MODAL_CHANGE_SCHED_THEME } from './utils/modals.js'
 
 const App = () => {
+	const [schedule, setSchedule] = useState(null)
 	const [valid, setValid] = useState(false)
 	const [textForm, setTextForm] = useState('')
 	const [snackbar, setSnackbar] = useState(null)
+	const [popout, setPopout] = useState(<ScreenSpinner size='large' />)
 	
 
 	const modalBack = (...args) => {
@@ -44,7 +46,7 @@ const App = () => {
 					params = { themeSched:  args[1]}
 					break;
 			}
-			mainStore.setPopout(<ScreenSpinner size='large' />)
+			setPopout(<ScreenSpinner size='large' />)
 			axios.get('https://tsu-helper-server.herokuapp.com/updateUser', {params: {
 				id: mainStore.fetchedUser.id,
 				...params
@@ -60,7 +62,7 @@ const App = () => {
 					mainStore.setAppUser({group: res.data.updated.group || mainStore.appUser.group, num: res.data.updated.num || mainStore.appUser.num,
 						 themeSched: res.data.updated.themeSched || mainStore.appUser.themeSched})
 				}
-				mainStore.setPopout(null)
+				setPopout(null)
 			})
 		mainStore.setActiveModal(mainStore.modalHistory[mainStore.modalHistory.length - 2]);
 		setValid(false)
@@ -69,9 +71,11 @@ const App = () => {
 	
 	bridge.subscribe(({ detail: { type, data }}) => {
 		if (type === 'VKWebAppUpdateConfig') {
+			const theme = data.scheme ? data.scheme : 'client_light';
 			const schemeAttribute = document.createAttribute('scheme');
-			schemeAttribute.value = data.scheme ? data.scheme : 'client_light';
+			schemeAttribute.value = theme
 			document.body.attributes.setNamedItem(schemeAttribute);
+			mainStore.setTheme(theme == "space_gray" ? "dark" : "light")
 		}
 		
 	});
@@ -88,7 +92,7 @@ const App = () => {
 			})
 		}
 		const getUser = (id) => {
-			mainStore.setPopout(<ScreenSpinner size='large' />)
+			setPopout(<ScreenSpinner size='large' />)
 			axios.get("https://tsu-helper-server.herokuapp.com/getUser", {params: {id: id}})
 			.then(res => {
 				if(!res.data.err){
@@ -101,7 +105,7 @@ const App = () => {
 				}else{
 					mainStore.setActivePanel('start')
 				}
-				mainStore.setPopout(null)
+				setPopout(null)
 			})
 			return id
 		}
@@ -231,26 +235,26 @@ const App = () => {
 		}
 	};
 	const createUser = (errorHandler, form) => {
-		mainStore.setPopout(<ScreenSpinner size='large' />)
+		setPopout(<ScreenSpinner size='large' />)
 		axios.get("https://tsu-helper-server.herokuapp.com/newUser", {params: {id: mainStore.fetchedUser.id, group: form.group, num: form.num}})
 			.then(res => {
 				if(!res.data.err){
 					mainStore.setAppUser({group: res.data.user.group, num: res.data.user.num})
-					mainStore.setPopout(null)
+					setPopout(null)
 					mainStore.setActivePanel('home')
 				} else {
 					errorHandler({header: "Ошибка сервера", text: res.data.text})
-					mainStore.setPopout(null)
+					setPopout(null)
 				}
 			})
 	}
 
 	return (
-		<View activePanel={mainStore.activePanel} popout={mainStore.popout} modal={modalRoot}>
+		<View activePanel={mainStore.activePanel} popout={popout} modal={modalRoot}>
 			<Start id="start" createError={createError} createUser={createUser} setPopout={mainStore.setPopout} setActivePanel={mainStore.setActivePanel} setAppUser={mainStore.setAppUser} vku={mainStore.fetchedUser}/>
 			<Home id='home' fetchedUser={mainStore.fetchedUser} go={go} appUser={mainStore.appUser}/>
 			<Persik id='persik' go={go} />
-			<Schedule id="schedule" go={go} setPopout={mainStore.setPopout} schedule={mainStore.schedule} setSchedule={mainStore.setSchedule} group={mainStore.appUser.group} appUser={mainStore.appUser} createError={createError}/>
+			<Schedule id="schedule" go={go} setPopout={setPopout} schedule={schedule} setSchedule={setSchedule} group={mainStore.appUser.group} appUser={mainStore.appUser} createError={createError}/>
 			<Settings id="settings" go={go} appUser={mainStore.appUser} setModal={mainStore.setModal} snackbar={snackbar}/>
 			<DetailedProgress id="detailedprogress" go={go} data={mainStore.detailed}/>
 			<Error id='error' err={mainStore.error} go={go}/>

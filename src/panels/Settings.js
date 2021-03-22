@@ -32,8 +32,8 @@ const Settings = ({ appUser, id, go, setModal, snackbar }) => {
 	</SimpleCell>
     </Group>
 	<Group header={<Header mode="primary">Предпочтения</Header>}>
-		<SimpleCell before={<Icon28PaletteOutline width={28}/>} indicator={appUser.themeSched} onClick={() => setModal(MODAL_CHANGE_SCHED_THEME)}>
-			Стиль расписания
+		<SimpleCell before={<Icon28PaletteOutline width={28}/>} indicator={"в разработке"} disabled>
+			Собственный фон
 		</SimpleCell>
 	</Group>
 	{snackbar}

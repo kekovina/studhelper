@@ -5,6 +5,7 @@ configure({ enforceActions: "always"})
 class MainStore{
     activePanel = 'home'
     fetchedUser = null
+    theme = 'light'
     appUser = {
         group: ""
     }
@@ -28,6 +29,7 @@ class MainStore{
             error: observable,
             modal: observable,
             modalHistory: observable,
+            theme: observable,
 
             setActivePanel: action,
             setVkUser: action,
@@ -40,7 +42,7 @@ class MainStore{
             setModal: action,
             setModalHistory: action,
             setActiveModal: action,
-            
+            setTheme: action
         })
     }
     setActivePanel = value => this.activePanel = value
@@ -73,6 +75,7 @@ class MainStore{
 		this.setModal(activeModal)
 		this.setModalHistory(history)
     }
+    setTheme = theme => this.theme = theme
 
 }
 
