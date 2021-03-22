@@ -17,6 +17,7 @@ import './Schedule.css';
 
 const osName = platform();
 
+
 const Schedule = props => {
 	const [selectedDate, setSelectedDate] = useState(getDate);
 	const [schedule, setSchedule] = useState(null)
@@ -24,6 +25,11 @@ const Schedule = props => {
 	var weeks = 0;
 	const now = new Date()
 	
+	const getComponent = (type, pr) => {
+		console.log(pr, ...pr)
+		const styles = [<SubjectBase {...pr} />, <Alesha {...pr} />]
+		return styles[type]
+	}
 	const handler = type => {
 		if(type == "next"){
 			props.setPopout(null)
@@ -94,8 +100,14 @@ const Schedule = props => {
 			<CellButton onClick={openSelector}> Выбрать другую дату</CellButton>
 		</Group>
 		<Group header={schedule ? <Header mode="secondary">Расписание загружено {prepareDate(schedule.updated)}</Header> : null}>
-		
-		{selectedSchedule && selectedSchedule.map(subject => <Alesha subject={subject} selectedDate={selectedDate}/>)}
+		{selectedSchedule && selectedSchedule.map(subject => {
+			switch(props.appUser.themeSched){
+				case 1:
+					return <Alesha subject={subject} selectedDate={selectedDate}/>
+				default:
+					return <SubjectBase subject={subject} selectedDate={selectedDate}/>
+			}
+		})}
 	  {!selectedSchedule && (
 		<Group style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
 			<Icon44SmileOutline 	width={100} height={100} style={{color: '#aaa'}}/>

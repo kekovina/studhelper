@@ -3,9 +3,12 @@ import { Icon56NotificationOutline, Icon24Done, Icon24Cancel } from '@vkontakte/
 import bridge from '@vkontakte/vk-bridge';
 import View from '@vkontakte/vkui/dist/components/View/View';
 import ScreenSpinner from '@vkontakte/vkui/dist/components/ScreenSpinner/ScreenSpinner';
-import { Avatar, Snackbar, ModalRoot, ModalPage, ModalPageHeader, PanelHeaderButton, FormLayout, Group, Text, Input, Button } from '@vkontakte/vkui'
+import { Avatar, Snackbar, ModalRoot, ModalPage, ModalPageHeader, PanelHeaderButton, FormLayout, Group, Text, Input, Button, Radio } from '@vkontakte/vkui'
 import '@vkontakte/vkui/dist/vkui.css';
 import axios from 'axios'
+import { observer } from 'mobx-react'
+
+import mainStore from './store/mainStore'
 
 
 import Home from './panels/Home';
@@ -19,44 +22,31 @@ import Error from './panels/Error'
 import News from './panels/News'
 import AdminMenu from './panels/AdminMenu'
 import LastVisit from './panels/admin/LastVisit'
-import { MODAL_CHANGE_GROUP, MODAL_CHANGE_NUM } from './utils/modals.js'
+import { MODAL_CHANGE_GROUP, MODAL_CHANGE_NUM, MODAL_CHANGE_SCHED_THEME } from './utils/modals.js'
 
 const App = () => {
-	const [activePanel, setActivePanel] = useState('home');
-	const [fetchedUser, setUser] = useState(null);
-	const [appUser, setAppUser] = useState({group: "N"})
-	const [popout, setPopout] = useState(<ScreenSpinner size='large' />);
-	const [detailed, setDetailed] = useState(null)
-	const [progress, setProgress] = useState(null)
-	const [schedule, setSchedule] = useState(null)
-	const [error, setError] = useState(null);
-	const [modal, setModal] = useState(null)
-	const [modalHistory, setModalHistory] = useState([])
 	const [valid, setValid] = useState(false)
 	const [textForm, setTextForm] = useState('')
 	const [snackbar, setSnackbar] = useState(null)
+	
 
-	const setActiveModal = (activeModal) => {
-		activeModal = activeModal || null;
-		let history = modalHistory ? [...modalHistory] : [];
-	
-		if (activeModal === null) {
-		  history = [];
-		} else if (history.indexOf(activeModal) !== -1) {
-		  history = history.splice(0, history.indexOf(activeModal) + 1);
-		} else {
-		  history.push(activeModal);
-		}
-	
-		setModal(activeModal)
-		setModalHistory(history)
-	  };
-	const modalBack = (type = null) => {
-		if(type){
-			const params = type == "num" ? { num: textForm } : { group: textForm }
-			setPopout(<ScreenSpinner size='large' />)
+	const modalBack = (...args) => {
+		const type = args[0]
+		var params
+			switch(type){
+				case 'num':
+					params = { num: textForm }
+					break;
+				case 'group':
+					params = { group: textForm }
+					break;
+				case 'theme_sched':
+					params = { themeSched:  args[1]}
+					break;
+			}
+			mainStore.setPopout(<ScreenSpinner size='large' />)
 			axios.get('https://tsu-helper-server.herokuapp.com/updateUser', {params: {
-				id: fetchedUser.id,
+				id: mainStore.fetchedUser.id,
 				...params
 			}, timeout: 15000}).then(res => {
 				if(res.data.err){
@@ -64,15 +54,15 @@ const App = () => {
 				}else{
 					const snack = (<Snackbar
 						onClose={() => setSnackbar(null)}
-						after={<Avatar src={fetchedUser.photo_100} size={32} />}
+						after={<Avatar src={mainStore.fetchedUser.photo_100} size={32} />}
 					  >Данные обновлены успешно</Snackbar>)
 					setSnackbar(snack)
-					setAppUser({...appUser, group: res.data.updated.group || appUser.group, num: res.data.updated.num || appUser.num})
+					mainStore.setAppUser({group: res.data.updated.group || mainStore.appUser.group, num: res.data.updated.num || mainStore.appUser.num,
+						 themeSched: res.data.updated.themeSched || mainStore.appUser.themeSched})
 				}
-				setPopout(null)
+				mainStore.setPopout(null)
 			})
-		}
-		setActiveModal(modalHistory[modalHistory.length - 2]);
+		mainStore.setActiveModal(mainStore.modalHistory[mainStore.modalHistory.length - 2]);
 		setValid(false)
 		setTextForm('')
 	};
@@ -86,31 +76,32 @@ const App = () => {
 		
 	});
 	const createError = (obj) => {
-		setError({...error, ...obj})
-		setActivePanel('error')
+		mainStore.setError({...mainStore.error, ...obj})
+		mainStore.setActivePanel('error')
 	}
 	useEffect(() => {
 		
 		async function fetchData() {
 			return await bridge.send('VKWebAppGetUserInfo').then(res => {
-				setUser(res);
+				mainStore.setVkUser(res);
 				return res.id
 			})
 		}
 		const getUser = (id) => {
-			setPopout(<ScreenSpinner size='large' />)
+			mainStore.setPopout(<ScreenSpinner size='large' />)
 			axios.get("https://tsu-helper-server.herokuapp.com/getUser", {params: {id: id}})
 			.then(res => {
 				if(!res.data.err){
 					if(res.data.user){
-						setAppUser({group: res.data.user.group, num: res.data.user.num, status: `группы ${res.data.user.group}`})
+						mainStore.setAppUser({group: res.data.user.group, num: res.data.user.num, status: `группы ${res.data.user.group}`, 
+										themeSched: res.data.user.themeSched || 0})
 					}else{
-						setActivePanel('start')
+						mainStore.setActivePanel('start')
 					}
 				}else{
-					setActivePanel('start')
+					mainStore.setActivePanel('start')
 				}
-				setPopout(null)
+				mainStore.setPopout(null)
 			})
 			return id
 		}
@@ -168,7 +159,7 @@ const App = () => {
 	}	
 	const modalRoot = (
 		<ModalRoot 
-		activeModal={modal}
+		activeModal={mainStore.modal}
 		onClose={modalBack}>
 		<ModalPage
           id={MODAL_CHANGE_GROUP}
@@ -216,47 +207,61 @@ const App = () => {
 				</FormLayout>
 			</Group>
 		</ModalPage>
-
+		<ModalPage
+          id={MODAL_CHANGE_SCHED_THEME}
+          onClose={modalBack}
+          header={
+            <ModalPageHeader
+              left={<PanelHeaderButton onClick={modalBack}><Icon24Cancel /></PanelHeaderButton>}
+              right={<PanelHeaderButton onClick={modalBack.bind(this, 'theme_sched', mainStore.appUser.themeSched)} disabled={!valid}><Icon24Done /></PanelHeaderButton>}
+            >
+              Выберите стиль
+            </ModalPageHeader>
+          }
+        >
+			<Radio name="style_sched" value="main" onClick={modalBack.bind(this, 'theme_sched', 0)}>Main</Radio>
+			<Radio name="style_sched" value="alesha" onClick={modalBack.bind(this, 'theme_sched', 1)}>Alesha</Radio>
+		</ModalPage>
 		</ModalRoot>
 	)
 	const go = e => {
-		setActivePanel(e.currentTarget.dataset.to);
+		mainStore.setActivePanel(e.currentTarget.dataset.to);
 		if(e.currentTarget.dataset.km){
-			setDetailed(JSON.parse(e.currentTarget.dataset.km))
+			mainStore.setDetailed(JSON.parse(e.currentTarget.dataset.km))
 		}
 	};
 	const createUser = (errorHandler, form) => {
-		setPopout(<ScreenSpinner size='large' />)
-		axios.get("https://tsu-helper-server.herokuapp.com/newUser", {params: {id: fetchedUser.id, group: form.group, num: form.num}})
+		mainStore.setPopout(<ScreenSpinner size='large' />)
+		axios.get("https://tsu-helper-server.herokuapp.com/newUser", {params: {id: mainStore.fetchedUser.id, group: form.group, num: form.num}})
 			.then(res => {
 				if(!res.data.err){
-					setAppUser({group: res.data.user.group, num: res.data.user.num})
-					setPopout(null)
-					setActivePanel('home')
+					mainStore.setAppUser({group: res.data.user.group, num: res.data.user.num})
+					mainStore.setPopout(null)
+					mainStore.setActivePanel('home')
 				} else {
 					errorHandler({header: "Ошибка сервера", text: res.data.text})
-					setPopout(null)
+					mainStore.setPopout(null)
 				}
 			})
 	}
 
 	return (
-		<View activePanel={activePanel} popout={popout} modal={modalRoot}>
-			<Start id="start" createError={createError} createUser={createUser} setPopout={setPopout} setActivePanel={setActivePanel} setAppUser={setAppUser} vku={fetchedUser}/>
-			<Home id='home' fetchedUser={fetchedUser} go={go} appUser={appUser}/>
+		<View activePanel={mainStore.activePanel} popout={mainStore.popout} modal={modalRoot}>
+			<Start id="start" createError={createError} createUser={createUser} setPopout={mainStore.setPopout} setActivePanel={mainStore.setActivePanel} setAppUser={mainStore.setAppUser} vku={mainStore.fetchedUser}/>
+			<Home id='home' fetchedUser={mainStore.fetchedUser} go={go} appUser={mainStore.appUser}/>
 			<Persik id='persik' go={go} />
-			<Schedule id="schedule" go={go} setPopout={setPopout} schedule={schedule} setSchedule={setSchedule} group={appUser.group} createError={createError}/>
-			<Settings id="settings" go={go} appUser={appUser} setModal={setModal} snackbar={snackbar}/>
-			<DetailedProgress id="detailedprogress" go={go} data={detailed}/>
-			<Error id='error' err={error} go={go}/>
-			<Progress id="progress" go={go} createError={createError} setPopout={setPopout} appUser={appUser} setDetailed={setDetailed} progress={progress} setProgress={setProgress}/>
+			<Schedule id="schedule" go={go} setPopout={mainStore.setPopout} schedule={mainStore.schedule} setSchedule={mainStore.setSchedule} group={mainStore.appUser.group} appUser={mainStore.appUser} createError={createError}/>
+			<Settings id="settings" go={go} appUser={mainStore.appUser} setModal={mainStore.setModal} snackbar={snackbar}/>
+			<DetailedProgress id="detailedprogress" go={go} data={mainStore.detailed}/>
+			<Error id='error' err={mainStore.error} go={go}/>
+			<Progress id="progress" go={go} createError={createError} setPopout={mainStore.setPopout} appUser={mainStore.appUser} setDetailed={mainStore.setDetailed} progress={mainStore.progress} setProgress={mainStore.setProgress}/>
 			<News id="news" go={go} />
 
 			<AdminMenu id="adminMenu" go={go} />
-			<LastVisit id="lastVisit" go={go} setPopout={setPopout}/>
+			<LastVisit id="lastVisit" go={go} setPopout={mainStore.setPopout}/>
 		</View>
 	);
 }
 
-export default App;
+export default observer(App);
 

@@ -9,12 +9,13 @@ import Icon24Back from '@vkontakte/icons/dist/24/back';
 import { Icon28Users3Outline } from '@vkontakte/icons';
 import { Icon20EducationOutline } from '@vkontakte/icons';
 import { Icon28PaletteOutline } from '@vkontakte/icons';
-import { MODAL_CHANGE_GROUP, MODAL_CHANGE_NUM } from '../utils/modals'
+import { MODAL_CHANGE_GROUP, MODAL_CHANGE_NUM, MODAL_CHANGE_SCHED_THEME } from '../utils/modals'
 
 const osName = platform();
 
-const Settings = ({ appUser, id, go, setModal, snackbar }) => (
-	<Panel id={id}>
+const Settings = ({ appUser, id, go, setModal, snackbar }) => {
+	const nameStyle = ['Main', 'AleshaDark'][appUser.themeSched]
+	return (<Panel id={id}>
 		<PanelHeader
 			left={<PanelHeaderButton onClick={go} data-to="home">
 				{osName === IOS ? <Icon28ChevronBack/> : <Icon24Back/>}
@@ -30,14 +31,14 @@ const Settings = ({ appUser, id, go, setModal, snackbar }) => (
 		Номер зачётки
 	</SimpleCell>
     </Group>
-	<Group>
-		<SimpleCell before={<Icon28PaletteOutline width={28}/>} disabled indicator="в разработке">
-			Предпочтения
+	<Group header={<Header mode="primary">Предпочтения</Header>}>
+		<SimpleCell before={<Icon28PaletteOutline width={28}/>} indicator={appUser.themeSched} onClick={() => setModal(MODAL_CHANGE_SCHED_THEME)}>
+			Стиль расписания
 		</SimpleCell>
 	</Group>
 	{snackbar}
-	</Panel>
-);
+	</Panel>)
+}
 
 Settings.propTypes = {
 	id: PropTypes.string.isRequired,
