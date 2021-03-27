@@ -138,7 +138,7 @@ export default function CustomCard({ data }) {
     }
     return (<div className={`alesha_card ${t} ${mainStore.theme}`}>
         <div className="top">
-            <div className="subj">{data.name.length > 60 ? data.name.slice(0,60)+"..." : data.name}</div>
+            <div className="subj">{data.name.length > 50 ? data.name.slice(0,50)+"..." : data.name}</div>
             <div className="type">{d}</div>
         </div>
         <div className="line line1"></div>

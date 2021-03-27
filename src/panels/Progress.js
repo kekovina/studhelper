@@ -27,11 +27,9 @@ const osName = platform();
 
 const Progress = ({ setPopout, go, id, appUser, progress, setProgress, createError }) => {
 	const [ activeTerm, setActiveTerm ] = useState(null)
-	const [ ok, setOk ] = useState(false)
-
-	const scheme = document.body.attributes.getNamedItem("scheme").value
 	const getProgress = () => {
-		setPopout(<ScreenSpinner size='large' />)
+		
+		try{
 		axios.get(`https://tsu-helper-server.herokuapp.com/getProgress?num=${appUser.num}`)
 			.then(res => {
 				if(!res.data.err){
@@ -40,20 +38,25 @@ const Progress = ({ setPopout, go, id, appUser, progress, setProgress, createErr
 					createError({type: 1, descr: res.data.text || "Сервер не вернул данные", name: "Ошибка запроса", code: res.data, back: 'home'})
 				}
 			})
-			.then(
-				setPopout(null)
-				)
 			.catch(e => {
-				createError({type: 2, descr: "Что-то пошло не так", name: "Внезапная ошибка", code: e, back: 'home'})
+				createError({type: 2, descr: "Что-то пошло не так", name: "Ошибка запроса", code: e, back: 'home'})
 				setPopout(null)
 			} )
+		}catch(e){
+			createError({type: 2, descr: "Сервер вернул ошибку", name: "Ошибка запроса", code: e, back: 'home'})
+			setPopout(null)
+		}
+
 	}
 	useEffect(() => {
-		
 		if(!progress){
+			setPopout(<ScreenSpinner size='large' />)
 			getProgress()
-	}
-	},[])
+		} else {
+			setPopout(null)
+		}
+	},[progress])
+	
 	return (
 	<Panel id={id}>
 		<PanelHeader

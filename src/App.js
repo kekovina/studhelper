@@ -35,38 +35,40 @@ const App = () => {
 	const modalBack = (...args) => {
 		const type = args[0]
 		var params
-			switch(type){
-				case 'num':
-					params = { num: textForm }
-					break;
-				case 'group':
-					params = { group: textForm }
-					break;
-				case 'theme_sched':
-					params = { themeSched:  args[1]}
-					break;
-			}
-			setPopout(<ScreenSpinner size='large' />)
-			axios.get('https://tsu-helper-server.herokuapp.com/updateUser', {params: {
-				id: mainStore.fetchedUser.id,
-				...params
-			}, timeout: 15000}).then(res => {
-				if(res.data.err){
-					createError({type: 1, descr: res.data.text, name: "Изменение настроек", code: res.data, back: 'settings'})
-				}else{
-					const snack = (<Snackbar
-						onClose={() => setSnackbar(null)}
-						after={<Avatar src={mainStore.fetchedUser.photo_100} size={32} />}
-					  >Данные обновлены успешно</Snackbar>)
-					setSnackbar(snack)
-					mainStore.setAppUser({group: res.data.updated.group || mainStore.appUser.group, num: res.data.updated.num || mainStore.appUser.num,
-						 themeSched: res.data.updated.themeSched || mainStore.appUser.themeSched})
+		if(textForm || args[1]){
+				switch(type){
+					case 'num':
+						params = { num: textForm }
+						break;
+					case 'group':
+						params = { group: textForm }
+						break;
+					case 'theme_sched':
+						params = { themeSched:  args[1]}
+						break;
 				}
-				setPopout(null)
-			})
-		mainStore.setActiveModal(mainStore.modalHistory[mainStore.modalHistory.length - 2]);
-		setValid(false)
-		setTextForm('')
+				setPopout(<ScreenSpinner size='large' />)
+				axios.get('https://tsu-helper-server.herokuapp.com/updateUser', {params: {
+					id: mainStore.fetchedUser.id,
+					...params
+				}, timeout: 15000}).then(res => {
+					if(res.data.err){
+						createError({type: 1, descr: res.data.text, name: "Изменение настроек", code: res.data, back: 'settings'})
+					}else{
+						const snack = (<Snackbar
+							onClose={() => setSnackbar(null)}
+							after={<Avatar src={mainStore.fetchedUser.photo_100} size={32} />}
+						>Данные обновлены успешно</Snackbar>)
+						setSnackbar(snack)
+						mainStore.setAppUser({group: res.data.updated.group || mainStore.appUser.group, num: res.data.updated.num || mainStore.appUser.num,
+							themeSched: res.data.updated.themeSched || mainStore.appUser.themeSched})
+					}
+					setPopout(null)
+				})
+			}
+			setValid(false)
+			setTextForm('')
+			mainStore.setActiveModal(mainStore.modalHistory[mainStore.modalHistory.length - 2]);
 	};
 	
 	bridge.subscribe(({ detail: { type, data }}) => {
@@ -258,7 +260,7 @@ const App = () => {
 			<Settings id="settings" go={go} appUser={mainStore.appUser} setModal={mainStore.setModal} snackbar={snackbar}/>
 			<DetailedProgress id="detailedprogress" go={go} data={mainStore.detailed}/>
 			<Error id='error' err={mainStore.error} go={go}/>
-			<Progress id="progress" go={go} createError={createError} setPopout={mainStore.setPopout} appUser={mainStore.appUser} setDetailed={mainStore.setDetailed} progress={mainStore.progress} setProgress={mainStore.setProgress}/>
+			<Progress id="progress" go={go} createError={createError} setPopout={setPopout} appUser={mainStore.appUser} setDetailed={mainStore.setDetailed} progress={mainStore.progress} setProgress={mainStore.setProgress}/>
 			<News id="news" go={go} />
 
 			<AdminMenu id="adminMenu" go={go} />

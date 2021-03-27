@@ -1,8 +1,8 @@
 .alesha_card{
     margin: 15px 10px;
     padding: 10px;
-    width: 130px;
-    height: 130px;
+    width: 120px;
+    height: 120px;
     border-radius: 16px;
     background: #F9F9F9;
     border: 1px solid #F9F9F9;
@@ -19,22 +19,22 @@
     font-family: "Roboto";
 }
 .alesha_card.fine{
-    border: 1px solid #34E145;
+    border: 1px solid #34e1457c;
 }
 .alesha_card.good{
-    border: 1px solid #34B8E1;
+    border: 1px solid #34b9e185;
 }
 .alesha_card.bad{
-    border: 1px solid #E7AB38;
+    border: 1px solid #e7aa3880;
 }
 .alesha_card.empty{
-    border: 1px solid #c7c7c7;
+    border: 1px solid #c7c7c783;
 }
 .alesha_card.fail{
-    border: 1px solid #C94B3A;
+    border: 1px solid #c94b3a8a;
 }
 .subj{
-    font-size: 16px;
+    font-size: 14px;
     font-weight: 500;
     line-height: 15px;
 }
@@ -80,19 +80,19 @@
     color: rgba(255, 255, 255, 0.38);
 }
 .alesha_card.fine .line{
-    background-color: #34E145;
+    background-color: #34e1457c;
 }
 .alesha_card.good .line{
-    background-color: #34B8E1;
+    background-color: #34b9e185;
 }
 .alesha_card.bad .line{
-    background-color: #E7AB38;
+    background-color: #e7aa3880;
 }
 .alesha_card.fail .line{
-    background-color: #C94B3A;
+    background-color: #c94b3a8a;
 }
 .alesha_card.empty .line{
-    background-color: #c7c7c7;
+    background-color: #c7c7c783;
 }
 
 .alesha_card.fine .points{

@@ -1,4 +1,12 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400&display=swap');
+:root{
+    --lec: #1CB362; 
+    --leclast: #1CB3628c; 
+    --lab:  #C65E18;
+    --lablast: #C65E188c;
+    --pract: #2187A8;
+    --practlast: #2187A88c;
+}
 .subject{
     border-radius: 28px;
     font-family: 'Roboto', sans-serif;
@@ -16,6 +24,10 @@
     box-shadow: 12px 12px 20px #0F0F10, -12px -12px 20px #262627, inset -10px -10px 15px #212123, inset 10px 10px 15px #121213;
     
 }
+.subject.last{
+    color: #888686
+}
+
 .subject .left{
     flex: 2;
     display: flex;
@@ -47,27 +59,74 @@
     font-size: 15px;
     font-weight: 300;
 }
-.subject .type{
-    border-radius: 50px;
-    padding: 2px 10px;
-    font-size: 10px;
-    margin-top: 10px;
-    color: white;
-}
-.subject.dark .type{
-    color: black
-}
-.subject .type.pract{
+
+.subject.pract .type{
     background: linear-gradient(320.19deg, #147898 13.64%, #5CCDF1 89.26%);
-    box-shadow: 0px 0px 20px #2187A8;
+    box-shadow: 0px 0px 10px var(--pract);
 }
-.subject .type.lec{
+
+
+.subject.lec .type{
     background:  linear-gradient(320.19deg, #168F4E 13.64%, #23D676 89.26%);
-    box-shadow: 0px 0px 20px #1CB362;
+    box-shadow: 0px 0px 10px var(--lec);
 }
-.subject .type.lab{
+.subject.lec.last .type{
+    background:  linear-gradient(320.19deg, #168F4E8c 13.64%,#23d6778c  89.26%);
+    box-shadow: 0px 0px 10px var(--leclast);
+}
+
+
+.subject.lab .type{
     background: linear-gradient(320.19deg, #CE4216 13.64%, #BD7C1B 89.26%);
-    box-shadow: 0px 0px 20px #C65E18;
+    box-shadow: 0px 0px 10px var(--lab);
+}
+.subject.lab.last .type{
+    background: linear-gradient(320.19deg, #CE42168c 13.64%, #BD7C1B8c 89.26%);
+    box-shadow: 0px 0px 10px var(--lablast);
+}
+
+.subject.pract.last .type{
+    background: linear-gradient(320.19deg, #1478988c 13.64%, #5CCDF18c 89.26%);
+    box-shadow: 0px 0px 10px var(--practlast);
+}
+
+
+.subject.dark.last.pract{
+    background: rgba(51, 145, 178, 0.2);
+    box-shadow: inset -10px -10px 15px #212123, inset 10px 10px 15px #121213;
+}
+.subject.dark.last.lec{
+    background: rgba(32, 197, 108, 0.2);
+    box-shadow: inset -10px -10px 15px #212123, inset 10px 10px 15px #121213;
+}
+.subject.dark.last.lab{
+    background: rgba(193, 111, 26, 0.2);
+    box-shadow: inset -10px -10px 15px #212123, inset 10px 10px 15px #121213;
+}
+
+
+.subject.light.last.lec{
+    background: rgba(32, 197, 108, 0.2);
+    box-shadow: inset -10px -10px 15px #f0eeee, inset 10px 10px 15px #cdcde0;
+}
+.subject.light.last.pract{
+    background: rgba(51, 145, 178, 0.2);
+    box-shadow: inset -10px -10px 15px #f0eeee, inset 10px 10px 15px #cdcde0;
+}
+.subject.light.last.lab{
+    background: rgba(193, 111, 26, 0.2);
+    box-shadow: inset -10px -10px 15px #f0eeee, inset 10px 10px 15px #cdcde0;
+}
+
+
+.subject.dark.active.pract{
+    box-shadow: 12px 12px 20px #328FB1, -12px -12px 20px #2F8AAD;
+}
+.subject.dark.active.lab{
+    box-shadow: 12px 12px 20px #C16F19, -12px -12px 20px #C0701A;
+}
+.subject.dark.active.lec{
+    box-shadow: 12px 12px 20px var(--lec), -12px -12px 20px var(--lec);
 }
 .changewrap{
     width: 100%;
@@ -95,16 +154,41 @@
     font-size: 18px;
     font-weight: 500;
 }
-.pg{
-    background: linear-gradient(320.19deg, #382186 13.64%, #7a58eb 89.26%);
-    box-shadow: 0px 0px 20px #5d3faf;
-    border-radius: 50px;
+.subject .types{
+    display: flex;
+    margin-top: 10px;
+}
+.subject .types div:first-child{
+    border-top-left-radius: 50px;
+    border-bottom-left-radius: 50px;
+}
+.subject .types div:last-child{
+    border-top-right-radius: 50px;
+    border-bottom-right-radius: 50px;
+}
+.subject .type{
     padding: 2px 10px;
     font-size: 10px;
-    margin-top: 10px;
+    color: white;
+    position: relative;
+    flex: 1 1 100%;
+}
+.subject.dark .type{
+    color: black
+}
+.pg{
+    background: linear-gradient(320.19deg, #5633ca 13.64%, #7a58eb 89.26%);
+    box-shadow: 0px 0px 10px #5d3faf;
+    padding: 2px 10px;
+    font-size: 10px;
     color: white;
     font-weight: 300;
     line-height: 18px;
+    width: 40%;
+}
+.subject.last .pg{
+    background: linear-gradient(320.19deg, #5633ca8c 13.64%, #7a58eb8c 89.26%);
+    box-shadow: 0px 0px 10px #5d3faf8c;
 }
 .subject.dark .pg{
     color: black

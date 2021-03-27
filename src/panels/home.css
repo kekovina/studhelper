@@ -26,7 +26,6 @@
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    width: 365px;
     margin: 30px auto;
 }
 .btn{

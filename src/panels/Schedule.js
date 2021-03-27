@@ -23,14 +23,10 @@ const Schedule = props => {
 	const [selectedDate, setSelectedDate] = useState(getDate);
 	const [schedule, setSchedule] = useState(null)
 	const [selectedSchedule, setSelectedSchedule] = useState(null)
+	
 	var weeks = 0;
 	const now = new Date()
 	
-	const getComponent = (type, pr) => {
-		console.log(pr, ...pr)
-		const styles = [<SubjectBase {...pr} />, <Alesha {...pr} />]
-		return styles[type]
-	}
 	const handler = type => {
 		if(type == "next"){
 			props.setPopout(null)
@@ -40,17 +36,30 @@ const Schedule = props => {
 			setSelectedDate(type)
 		}
 	}
+	const getTime = (time) => {
+		return `${((time.getHours()+'').length < 2 ? '0' : '')+time.getHours()}:${((time.getMinutes()+'').length < 2 ? '0' : '')+time.getMinutes()}`
+	}
+	useEffect(() => {
+		if(selectedDate.day.getDay() == 0){
+			setSelectedDate(getDate(new Date(), 1))
+		}
+	}, [])
 	const getSchedule = () => {
 		props.setPopout(<ScreenSpinner size='large' />)
-		axios.get("https://tsu-helper-server.herokuapp.com/getSchedule", {params: {group: props.group}})
-		.then(res => {
-			if(!res.data.err){
-				setSchedule(res.data.res.data)
-			} else {
-				props.createError({type: 1, descr: res.data.text, name: "Ошибка запроса", code: res.data, back: 'home'})
-			}
+		try{
+			axios.get("https://tsu-helper-server.herokuapp.com/getSchedule", {params: {group: props.group}})
+			.then(res => {
+				if(!res.data.err){
+					setSchedule(res.data.res.data)
+				} else {
+					props.createError({type: 1, descr: res.data.text, name: "Ошибка запроса", code: res.data, back: 'home'})
+				}
+				props.setPopout(null)
+			})
+		} catch(e){
+			props.createError({type: 1, descr: "Сервер вернул ошибку", name: "Ошибка запроса", code: e, back: 'home'})
 			props.setPopout(null)
-		})
+		}
 	}
 	Date.prototype.getWeek = function() {
         var onejan = new Date(this.getFullYear(), 0, 1);
@@ -64,13 +73,16 @@ const Schedule = props => {
         onClose={props.setPopout.bind(this, null)}
         iosCloseItem={<ActionSheetItem autoclose mode="cancel">Отменить</ActionSheetItem>}
       >
+	
 	{
 			getWeek(new Date(now.getTime()+weeks*7*24*60*60*1000)).map((i,index) => {
 			var {day, text, mini} = getDate(i);
 			if(!day.getDay()){
 				return 
 			}
-			return (<ActionSheetItem autoclose onClick={handler.bind(this, {text, day, mini})} subtitle="Авто" mode={day.getDate() == selectedDate.day.getDate() ? 'cancel' : 'default'}>
+			
+			return (
+			<ActionSheetItem autoclose onClick={handler.bind(this, {text, day, mini})} subtitle="Авто" mode={day.getDate() == selectedDate.day.getDate() ? 'cancel' : 'default'}>
         	{day.getDate() == new Date(now.getTime()+24*60*60*1000).getDate() ? "завтра" : day.getDate() == now.getDate() ?  "сегодня" : text}
         </ActionSheetItem>)
 		})}
@@ -102,7 +114,10 @@ const Schedule = props => {
 			<button onClick={openSelector} className={`changedate ${mainStore.theme}`}>Выбрать другую дату</button>
 		</div>
 		<Group header={schedule ? <Header mode="secondary">Расписание загружено {prepareDate(schedule.updated)}</Header> : null}>
-		{selectedSchedule && selectedSchedule.map(subject => <Alesha subject={subject} selectedDate={selectedDate}/>)}
+		{selectedSchedule && selectedSchedule.map(subject => {
+			const status = (now.getDay() == now.getDay()) && (getTime(now) >= subject.start) && (getTime(now) <= subject.end) ? 'active' : now > selectedDate.day ? "last" : "future"
+			return (<Alesha subject={subject} selectedDate={selectedDate} status={status}/>)
+		})}
 	  {!selectedSchedule && (
 		<Group style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
 			<Icon44SmileOutline 	width={100} height={100} style={{color: '#aaa'}}/>
