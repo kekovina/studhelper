@@ -128,6 +128,16 @@
 .subject.dark.active.lec{
     box-shadow: 12px 12px 20px var(--lec), -12px -12px 20px var(--lec);
 }
+
+.subject.light.active.pract{
+    box-shadow: 6px 6px 10px #328FB1, -6px -6px 10px #2F8AAD;
+}
+.subject.light.active.lab{
+    box-shadow: 6px 6px 10px #C16F19, -6px -6px 10px #C0701A;
+}
+.subject.light.active.lec{
+    box-shadow: 6px 6px 10px var(--lec), -6px -6px 10px var(--lec);
+}
 .changewrap{
     width: 100%;
     display: flex;
