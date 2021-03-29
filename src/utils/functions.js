@@ -26,6 +26,9 @@ const prepareDate = date => {
 }
 const getDate = (date= new Date(), offset = 0) => {
 	const createOffset = new Date(date.getTime() + offset * 24 * 60 * 60 * 1000);
+	createOffset.setHours(23)
+	createOffset.setMinutes(59)
+	createOffset.setSeconds(59)
 	const months = ["января", "февраля", "марта", "апреля", "мая", "июня", "июля", "августа", "сентября", "октября", "ноября", "декабря"]
 	const day = ['воскресение', 'понедельник', 'вторник', 'среда', 'четверг', 'пятница', 'суббота']
 	return {day: createOffset, 
