@@ -118,7 +118,10 @@
     box-shadow: inset -10px -10px 15px #f0eeee, inset 10px 10px 15px #cdcde0;
 }
 
-
+.subject.active{
+    transform: scale(1.01)
+    
+}
 .subject.dark.active.pract{
     box-shadow: 12px 12px 20px #328FB1, -12px -12px 20px #2F8AAD;
 }
