@@ -115,7 +115,7 @@ const Schedule = props => {
 		</div>
 		<Group header={schedule ? <Header mode="secondary">Расписание загружено {prepareDate(schedule.updated)}</Header> : null}>
 		{selectedSchedule && selectedSchedule.map(subject => {
-			const status = (now.getDay() == selectedDate.day.getDay()) && (getTime(now) >= subject.start) && (getTime(now) <= subject.end) ? 'active' : (now.getDay() == selectedDate.day.getDay()) && (now > selectedDate.day) ? "last" :  now > selectedDate.day ? "last" : "future"
+			const status = (now.getDay() == selectedDate.day.getDay()) && (getTime(now) >= subject.start) && (getTime(now) <= subject.end) ? 'active' : (now.getDay() == selectedDate.day.getDay()) && (getTime(now) >= subject.end) ? "last" :  now > selectedDate.day ? "last" : "future"
 			
 	console.log(now, selectedDate.day)
 			return (<Alesha subject={subject} selectedDate={selectedDate} status={status}/>)
