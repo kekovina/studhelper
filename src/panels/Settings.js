@@ -10,6 +10,7 @@ import { Icon28Users3Outline } from '@vkontakte/icons';
 import { Icon20EducationOutline } from '@vkontakte/icons';
 import { Icon28PaletteOutline } from '@vkontakte/icons';
 import { MODAL_CHANGE_GROUP, MODAL_CHANGE_NUM, MODAL_CHANGE_SCHED_THEME } from '../utils/modals'
+import { observer } from 'mobx-react'
 
 const osName = platform();
 
@@ -66,4 +67,4 @@ Settings.propTypes = {
 	go: PropTypes.func.isRequired,
 };
 
-export default Settings;
+export default observer(Settings);
