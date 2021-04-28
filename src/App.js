@@ -72,7 +72,7 @@ const App = () => {
 						>Данные обновлены успешно</Snackbar>)
 						setSnackbar(snack)
 						mainStore.setAppUser({group: res.data.updated.group || mainStore.appUser.group, num: res.data.updated.num || mainStore.appUser.num,
-							themeSched: res.data.updated.themeSched || mainStore.appUser.themeSched})
+							themeSched: res.data.updated.themeSched || mainStore.appUser.themeSched, status: `группы ${res.data.updated.group || mainStore.appUser.group}`})
 					}
 					setPopout(null)
 				})
