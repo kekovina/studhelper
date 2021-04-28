@@ -6,7 +6,8 @@ import ScreenSpinner from '@vkontakte/vkui/dist/components/ScreenSpinner/ScreenS
 import { Avatar, Snackbar, ModalRoot, ModalPage, ModalPageHeader, PanelHeaderButton, FormLayout, Group, Text, Input, Button, Radio } from '@vkontakte/vkui'
 import '@vkontakte/vkui/dist/vkui.css';
 import axios from 'axios'
-import { observer } from 'mobx-react'
+import { observer, Provider } from 'mobx-react'
+import { serverURL } from './config'
 
 import mainStore from './store/mainStore'
 
@@ -59,7 +60,7 @@ const App = () => {
 						break;
 				}
 				setPopout(<ScreenSpinner size='large' />)
-				axios.get('https://tsu-helper-server.herokuapp.com/updateUser', {params: {
+				axios.get(`${serverURL}/updateUser`, {params: {
 					id: mainStore.fetchedUser.id,
 					...params
 				}, timeout: 15000}).then(res => {
@@ -104,9 +105,9 @@ const App = () => {
 				return res.id
 			})
 		}
-		const getUser = (id) => {
+		const getUser = async (id) => {
 			setPopout(<ScreenSpinner size='large' />)
-			axios.get("https://tsu-helper-server.herokuapp.com/getUser", {params: {id: id}})
+			return await axios.get(`${serverURL}/getUser`, {params: {id: id}})
 			.then(res => {
 				if(!res.data.err){
 					if(res.data.user){
@@ -118,11 +119,16 @@ const App = () => {
 				}else{
 					mainStore.setActivePanel('start')
 				}
+			})
+		}
+		fetchData().then(getUser).then(() => {
+			mainStore.getSchedule().then(res => {
+				if(res){
+					createError({type: 1, code: res, descr: res.text})
+				}
 				setPopout(null)
 			})
-			return id
-		}
-		fetchData().then(getUser)
+		})
 		.then((id) => {
 			bridge.send("VKWebAppCallAPIMethod", {
 				"method": "apps.isNotificationsAllowed",
@@ -235,7 +241,7 @@ const App = () => {
 	};
 	const createUser = (errorHandler, form) => {
 		setPopout(<ScreenSpinner size='large' />)
-		axios.get("https://tsu-helper-server.herokuapp.com/newUser", {params: {id: mainStore.fetchedUser.id, group: form.group, num: form.num}})
+		axios.get(`${serverURL}/newUser`, {params: {id: mainStore.fetchedUser.id, group: form.group, num: form.num}})
 			.then(res => {
 				if(!res.data.err){
 					mainStore.setAppUser({group: res.data.user.group, num: res.data.user.num})
@@ -249,20 +255,22 @@ const App = () => {
 	}
 
 	return (
-		<View activePanel={mainStore.activePanel} popout={popout} modal={modalRoot}>
-			<Start id="start" createError={createError} createUser={createUser} setPopout={mainStore.setPopout} setActivePanel={mainStore.setActivePanel} setAppUser={mainStore.setAppUser} vku={mainStore.fetchedUser}/>
-			<Home id='home' fetchedUser={mainStore.fetchedUser} go={go} appUser={mainStore.appUser}/>
-			<Persik id='persik' go={go} />
-			<Schedule id="schedule" go={go} setPopout={setPopout} schedule={schedule} setSchedule={setSchedule} group={mainStore.appUser.group} appUser={mainStore.appUser} createError={createError}/>
-			<Settings id="settings" go={go} appUser={mainStore.appUser} setModal={mainStore.setModal} snackbar={snackbar}/>
-			<DetailedProgress id="detailedprogress" go={go} data={mainStore.detailed}/>
-			<Error id='error' err={mainStore.error} go={go}/>
-			<Progress id="progress" go={go} createError={createError} setPopout={setPopout} appUser={mainStore.appUser} setDetailed={mainStore.setDetailed} progress={mainStore.progress} setProgress={mainStore.setProgress}/>
-			<News id="news" go={go} />
+		<Provider store={mainStore}>
+			<View activePanel={mainStore.activePanel} popout={popout} modal={modalRoot}>
+				<Start id="start" createError={createError} createUser={createUser} setPopout={mainStore.setPopout} setActivePanel={mainStore.setActivePanel} setAppUser={mainStore.setAppUser} vku={mainStore.fetchedUser}/>
+				<Home id='home' fetchedUser={mainStore.fetchedUser} go={go} appUser={mainStore.appUser}/>
+				<Persik id='persik' go={go} />
+				<Schedule id="schedule" go={go} setPopout={setPopout} schedule={mainStore.schedule} setSchedule={setSchedule} group={mainStore.appUser.group} appUser={mainStore.appUser} createError={createError}/>
+				<Settings id="settings" go={go} appUser={mainStore.appUser} setModal={mainStore.setModal} snackbar={snackbar}/>
+				<DetailedProgress id="detailedprogress" go={go} data={mainStore.detailed}/>
+				<Error id='error' err={mainStore.error} go={go}/>
+				<Progress id="progress" go={go} createError={createError} setPopout={setPopout} appUser={mainStore.appUser} setDetailed={mainStore.setDetailed} progress={mainStore.progress} setProgress={mainStore.setProgress}/>
+				<News id="news" go={go} />
 
-			<AdminMenu id="adminMenu" go={go} />
-			<LastVisit id="lastVisit" go={go} setPopout={mainStore.setPopout}/>
-		</View>
+				<AdminMenu id="adminMenu" go={go} />
+				<LastVisit id="lastVisit" go={go} setPopout={mainStore.setPopout}/>
+			</View>
+		</Provider>
 	);
 }
 

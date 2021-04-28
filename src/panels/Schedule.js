@@ -9,8 +9,7 @@ import Icon28ChevronBack from '@vkontakte/icons/dist/28/chevron_back';
 import Icon24Back from '@vkontakte/icons/dist/24/back';
 import { Icon44SmileOutline } from '@vkontakte/icons';
 import { getDate, prepareDate, getWeek } from '../utils/functions'
-import axios from 'axios'
-import SubjectBase from '../components/SubjectBase'
+import { inject, observer } from 'mobx-react'
 import Alesha from '../components/Alesha'
 import mainStore from '../store/mainStore'
 
@@ -19,17 +18,18 @@ import './Schedule.css';
 const osName = platform();
 
 
-const Schedule = props => {
+const Schedule = inject("store")(observer(({ store, setPopout, id, go }) => {
 	const [selectedDate, setSelectedDate] = useState(getDate);
-	const [schedule, setSchedule] = useState(null)
 	const [selectedSchedule, setSelectedSchedule] = useState(null)
-	
+	const { schedule } = store
+	console.log(schedule)
+
 	
 	var weeks = 0;
 	const now = new Date()
 	const handler = type => {
 		if(type == "next"){
-			props.setPopout(null)
+			setPopout(null)
 			openSelector()
 			weeks+=1
 		} else {
@@ -44,23 +44,6 @@ const Schedule = props => {
 			setSelectedDate(getDate(new Date(), 1))
 		}
 	}, [])
-	const getSchedule = () => {
-		props.setPopout(<ScreenSpinner size='large' />)
-		try{
-			axios.get("https://tsu-helper-server.herokuapp.com/getSchedule", {params: {group: props.group}})
-			.then(res => {
-				if(!res.data.err){
-					setSchedule(res.data.res.data)
-				} else {
-					props.createError({type: 1, descr: res.data.text, name: "Ошибка запроса", code: res.data, back: 'home'})
-				}
-				props.setPopout(null)
-			})
-		} catch(e){
-			props.createError({type: 1, descr: "Сервер вернул ошибку", name: "Ошибка запроса", code: e, back: 'home'})
-			props.setPopout(null)
-		}
-	}
 	Date.prototype.getWeek = function() {
         var onejan = new Date(this.getFullYear(), 0, 1);
 		if(this.getDay() == 6){
@@ -70,7 +53,7 @@ const Schedule = props => {
     }
 	const openSelector = () => {
 		const popout = (<ActionSheet 
-        onClose={props.setPopout.bind(this, null)}
+        onClose={setPopout.bind(this, null)}
         iosCloseItem={<ActionSheetItem autoclose mode="cancel">Отменить</ActionSheetItem>}
       >
 	
@@ -90,20 +73,20 @@ const Schedule = props => {
         	Другие даты
         </ActionSheetItem>)}
       </ActionSheet>)
-		props.setPopout(popout)
+		setPopout(popout)
 		weeks+=1
 	}
-	useEffect(() => {
-		getSchedule()
-	}, []);
+	// useEffect(() => {
+	// 	getSchedule()
+	// }, []);
 	useEffect(() => {
 		if(schedule){
 			setSelectedSchedule(schedule.data.filter(item => item.date == selectedDate.mini)[0]?.schedule || null)
 		}
 	},[schedule, selectedDate])
-	return (<Panel id={props.id}>
+	return (<Panel id={id}>
 		<PanelHeader
-			left={<PanelHeaderButton onClick={props.go} data-to="home">
+			left={<PanelHeaderButton onClick={go} data-to="home">
 				{osName === IOS ? <Icon28ChevronBack/> : <Icon24Back/>}
 			</PanelHeaderButton>}
 		>
@@ -115,9 +98,8 @@ const Schedule = props => {
 		</div>
 		<Group header={schedule ? <Header mode="secondary">Расписание загружено {prepareDate(schedule.updated)}</Header> : null}>
 		{selectedSchedule && selectedSchedule.map(subject => {
-			const status = (now.getDay() == selectedDate.day.getDay()) && (getTime(now) >= subject.start) && (getTime(now) <= subject.end) ? 'active' : (now.getDay() == selectedDate.day.getDay()) && (getTime(now) >= subject.end) && (now.getDay() == selectedDate.day.getDay()) ? "last" :  now > selectedDate.day ? "last" : "future"
+			const status = (now.getDate() == selectedDate.day.getDate()) && (getTime(now) >= subject.start) && (getTime(now) <= subject.end) ? 'active' : (now.getDay() == selectedDate.day.getDay()) && (getTime(now) >= subject.end) ? "last" :  now > selectedDate.day ? "last" : "future"
 			
-	console.log(now, selectedDate.day)
 			return (<Alesha subject={subject} selectedDate={selectedDate} status={status}/>)
 		})}
 	  {!selectedSchedule && (
@@ -130,7 +112,7 @@ const Schedule = props => {
 
 		</Group>
 	</Panel>)
-}
+}))
 
 
 

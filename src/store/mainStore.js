@@ -1,4 +1,6 @@
 import { action, configure, observable, makeObservable } from 'mobx'
+import { serverURL } from '../config'
+import axios from 'axios'
 
 configure({ enforceActions: "always"})
 
@@ -37,7 +39,7 @@ class MainStore{
             setPopout: action,
             setProgress: action,
             setDetailed: action,
-            setSchedule: action,
+            getSchedule: action,
             setError: action,
             setModal: action,
             setModalHistory: action,
@@ -56,7 +58,18 @@ class MainStore{
     setPopout = popout => this.popout = popout
     setProgress = progress => this.progress = progress
     setDetailed = detailed => this.detailed = detailed
-    setSchedule = schedule => this.schedule = schedule
+    getSchedule = async () => {
+      return await axios.get(`${serverURL}/getSchedule`, {params: {group: this.appUser.group}})
+        .then(res => {
+          if(res.data.err){
+            return {...res.data, text: "Не удалось загрузить расписание"}
+          }
+          if(!res.data){
+            return {err: 1, text: 'Сервер не вернул данные'}
+          }
+          this.schedule = res.data.res.data
+        })
+    }
     setError = error => this.error = error
     setModal = modal => this.modal = modal
     setModalHistory = history => this.history = history
@@ -76,6 +89,7 @@ class MainStore{
 		this.setModalHistory(history)
     }
     setTheme = theme => this.theme = theme
+
 
 }
 
