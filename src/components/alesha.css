@@ -17,7 +17,7 @@
     padding: 15px 10px;
     background: #E5E5F1;
     box-shadow: 12px 12px 20px #CECEEC, -12px -12px 20px #FFFFFF;
-
+    min-height: 50px;
 }
 .subject.dark{
     background: #19191A;
@@ -205,4 +205,38 @@
 }
 .subject.dark .pg{
     color: black
+}
+.skeleton{
+    background: linear-gradient(
+90deg
+,hsla(0,0%,74.5%,.2) 25%,hsla(0,0%,50.6%,.24) 37%,hsla(0,0%,74.5%,.2) 63%);
+    background-size: 400% 100%;
+    -webkit-animation: skeleton 1.4s ease infinite;
+    animation: skeleton 1.4s ease infinite;
+}
+.skeleton.dark{
+    background: linear-gradient(
+        90deg
+        ,rgba(211, 211, 211, 0.2) 25%,rgba(124, 124, 124, 0.24) 37%,rgba(211, 211, 211, 0.2) 63%);
+        background-size: 400% 100%;
+    -webkit-animation: skeleton 1.4s ease infinite;
+    animation: skeleton 1.4s ease infinite;
+}
+@keyframes skeleton{
+    0% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0 50%;
+    }
+}
+.subject.empty{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    margin: 5px 10px
+}
+.subject.skeleton, .subject.home{
+    margin: 5px 10px
 }

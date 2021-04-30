@@ -8,7 +8,7 @@ import PanelHeaderButton from '@vkontakte/vkui/dist/components/PanelHeaderButton
 import Icon28ChevronBack from '@vkontakte/icons/dist/28/chevron_back';
 import Icon24Back from '@vkontakte/icons/dist/24/back';
 import { Icon44SmileOutline } from '@vkontakte/icons';
-import { getDate, prepareDate, getWeek } from '../utils/functions'
+import { getDate, prepareDate, getWeek, getTime } from '../utils/functions'
 import { inject, observer } from 'mobx-react'
 import Alesha from '../components/Alesha'
 import mainStore from '../store/mainStore'
@@ -36,9 +36,7 @@ const Schedule = inject("store")(observer(({ store, setPopout, id, go }) => {
 			setSelectedDate(type)
 		}
 	}
-	const getTime = (time) => {
-		return `${((time.getHours()+'').length < 2 ? '0' : '')+time.getHours()}:${((time.getMinutes()+'').length < 2 ? '0' : '')+time.getMinutes()}`
-	}
+	
 	useEffect(() => {
 		if(selectedDate.day.getDay() == 0){
 			setSelectedDate(getDate(new Date(), 1))
@@ -98,8 +96,7 @@ const Schedule = inject("store")(observer(({ store, setPopout, id, go }) => {
 		</div>
 		<Group header={schedule ? <Header mode="secondary">Расписание загружено {prepareDate(schedule.updated)}</Header> : null}>
 		{selectedSchedule && selectedSchedule.map(subject => {
-			const status = (now.getDate() == selectedDate.day.getDate()) && (getTime(now) >= subject.start) && (getTime(now) <= subject.end) ? 'active' : (now.getDay() == selectedDate.day.getDay()) && (getTime(now) >= subject.end) ? "last" :  now > selectedDate.day ? "last" : "future"
-			
+			const status = (now.getDate() == selectedDate.day.getDate()) && (getTime(now) >= subject.start) && (getTime(now) <= subject.end) ? 'active' : (now.getDate() == selectedDate.day.getDate()) && (getTime(now) >= subject.end) ? "last" :  now.getTime() > selectedDate.day.getTime() ? "last" : "future"
 			return (<Alesha subject={subject} selectedDate={selectedDate} status={status}/>)
 		})}
 	  {!selectedSchedule && (

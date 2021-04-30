@@ -36,6 +36,7 @@ const Progress = ({ setPopout, go, id, appUser, progress, setProgress, createErr
 					setProgress(res.data)
 				} else {
 					createError({type: 1, descr: res.data.text || "Сервер не вернул данные", name: "Ошибка запроса", code: res.data, back: 'home'})
+					setPopout(null)
 				}
 			})
 			.catch(e => {

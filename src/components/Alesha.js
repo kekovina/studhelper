@@ -4,10 +4,21 @@ import mainStore from '../store/mainStore'
 
 import './alesha.css';
 
-export default function Alesha({ subject, selectedDate, status }){
+export default function Alesha({ subject, status, skeleton, home }){
+	if(skeleton){
+		return (
+			<div className={`subject ${mainStore.theme} skeleton`}>
+				
+			</div>
+		)
+	}else if(!subject){
+			return  (<div className={`subject ${mainStore.theme} empty`}>
+				Ты ничего не прогуливаешь
+			</div>)
+	} else {
         const color = /лекц/gi.test(subject.type) ? 'lec' : /лаб/gi.test(subject.type) ? "lab" : /практ/gi.test(subject.type) ? "pract" : "empty"
 		return (
-			<div className={`subject ${mainStore.theme} ${status} ${color}`}>
+			<div className={`subject ${mainStore.theme} ${status} ${color} ${home ? 'home' : ''}`}>
 				<div className="left">
 					<div className="start">{subject.start}</div>
 					<div className="end">{subject.end}</div>
@@ -24,4 +35,5 @@ export default function Alesha({ subject, selectedDate, status }){
 				</div>
 			</div>
 		)
+	}
 }

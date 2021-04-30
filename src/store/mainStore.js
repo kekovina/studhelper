@@ -1,6 +1,7 @@
-import { action, configure, observable, makeObservable } from 'mobx'
+import { action, configure, observable, makeObservable, computed } from 'mobx'
 import { serverURL } from '../config'
 import axios from 'axios'
+import { getDate, getTime } from '../utils/functions'
 
 configure({ enforceActions: "always"})
 
@@ -18,6 +19,31 @@ class MainStore{
     error = null
     modal = null
     modalHistory = []
+    get currentLesson(){
+      let date = getDate()
+      let day = this.schedule ? this.schedule.data.filter(item => item.date == date.mini)[0]?.schedule || null : null
+      let now = getTime(new Date())
+      // let now = getTime(new Date('2021-04-30 13:09'))
+      let res = day ? day.filter(item => (now <= item.end)).shift() : null
+      if(res){
+        res.text = res.start > now ?  "Следующая пара" : "Сейчас идёт"
+      }
+      return res
+    }
+    get analizationSchedule(){
+      let day = null
+      let i = 1;
+      let first
+      if(this.schedule){
+        while(!day){
+          let date = getDate(new Date(), i)
+          day = this.schedule.data.filter(item => item.date == date.mini)[0]?.schedule || null 
+          i++
+        }
+        first = day.shift()
+      }
+      return first || null
+    }
 
     constructor(){
         makeObservable(this, {
@@ -32,6 +58,8 @@ class MainStore{
             modal: observable,
             modalHistory: observable,
             theme: observable,
+            currentLesson: computed,
+            analizationSchedule: computed,
 
             setActivePanel: action,
             setVkUser: action,
@@ -44,7 +72,7 @@ class MainStore{
             setModal: action,
             setModalHistory: action,
             setActiveModal: action,
-            setTheme: action
+            setTheme: action,
         })
     }
     setActivePanel = value => this.activePanel = value
@@ -89,6 +117,7 @@ class MainStore{
 		this.setModalHistory(history)
     }
     setTheme = theme => this.theme = theme
+    
 
 
 }

@@ -47,5 +47,8 @@ const getWeek = (date = new Date()) => {
 	}
 	return res
 }
+const getTime = (time) => {
+	return `${((time.getHours()+'').length < 2 ? '0' : '')+time.getHours()}:${((time.getMinutes()+'').length < 2 ? '0' : '')+time.getMinutes()}`
+}
 
-module.exports = { prepareDate, getDate, getWeek }
+module.exports = { prepareDate, getDate, getWeek, getTime }
