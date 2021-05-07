@@ -29,7 +29,7 @@ const Home = inject('store')(observer(({ id, go, fetchedUser, appUser, store }) 
 			store.currentLesson && (<Header mode="secondary">{store.currentLesson && store.currentLesson.text}</Header>)
 		}
 		{
-			store.currentLesson && (<Alesha subject={store.currentLesson} status='future' skeleton={!store.schedule} home/>)
+			store.currentLesson && (store.currentLesson.sched.map(item => <Alesha subject={item} status='future' skeleton={!store.schedule} home/>))
 		}
 		{
 			//!store.currentLesson && store.analizationSchedule && <NextLessons data={store.analizationSchedule}/>

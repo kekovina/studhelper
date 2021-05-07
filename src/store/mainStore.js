@@ -20,15 +20,17 @@ class MainStore{
     modal = null
     modalHistory = []
     get currentLesson(){
-      let date = getDate()
+      let date = getDate(new Date())
       let day = this.schedule ? this.schedule.data.filter(item => item.date == date.mini)[0]?.schedule || null : null
       let now = getTime(new Date())
-      // let now = getTime(new Date('2021-04-30 13:09'))
+      // let now = getTime(new Date('2021-05-11 12:00'))
       let res = day ? day.filter(item => (now <= item.end)).shift() : null
       if(res){
-        res.text = res.start > now ?  "Следующая пара" : "Сейчас идёт"
+        let sched = day.filter(item => item.start == res.start)
+        let text = res.start > now ?  "Следующая пара" : "Сейчас идёт"
+        return { sched, text }
       }
-      return res
+      return null
     }
     get analizationSchedule(){
       let day = null
