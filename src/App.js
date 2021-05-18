@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Icon56NotificationOutline, Icon24Done, Icon24Cancel } from '@vkontakte/icons';
+import {Icon24Done, Icon24Cancel } from '@vkontakte/icons';
+
+import { Icon16ClockOurline, Icon20EducationOutline, Icon20NewsfeedOutline, Icon20ServicesOutline, Icon20HomeOutline } from '@vkontakte/icons'
 import bridge from '@vkontakte/vk-bridge';
 import View from '@vkontakte/vkui/dist/components/View/View';
 import ScreenSpinner from '@vkontakte/vkui/dist/components/ScreenSpinner/ScreenSpinner';
@@ -21,8 +23,11 @@ import Start from './panels/Start'
 import DetailedProgress from './panels/DetailedProgress'
 import Error from './panels/Error'
 import News from './panels/News'
+import Profile from './panels/Profile'
 import AdminMenu from './panels/AdminMenu'
 import LastVisit from './panels/admin/LastVisit'
+
+import { Epic, Tabbar, TabbarItem } from '@vkontakte/vkui'
 import { MODAL_CHANGE_GROUP, MODAL_CHANGE_NUM, MODAL_CHANGE_SCHED_THEME } from './utils/modals.js'
 
 const App = () => {
@@ -31,6 +36,11 @@ const App = () => {
 	const [textForm, setTextForm] = useState('')
 	const [snackbar, setSnackbar] = useState(null)
 	const [popout, setPopout] = useState(<ScreenSpinner size='large' />)
+	const [activeStory, setActiveStory] = React.useState('home');
+	const onStoryChange = (e) => {
+		setActiveStory(e.currentTarget.dataset.story)
+		mainStore.setActivePanel(e.currentTarget.dataset.story)
+	};
 	
 	const sendNotification = (text) => {
 		return bridge.send('VKWebAppGetUserInfo').then(res => bridge.send("VKWebAppCallAPIMethod", {
@@ -258,7 +268,7 @@ const App = () => {
 		<Provider store={mainStore}>
 			<View activePanel={mainStore.activePanel} popout={popout} modal={modalRoot}>
 				<Start id="start" createError={createError} createUser={createUser} setPopout={mainStore.setPopout} setActivePanel={mainStore.setActivePanel} setAppUser={mainStore.setAppUser} vku={mainStore.fetchedUser}/>
-				<Home id='home' fetchedUser={mainStore.fetchedUser} go={go} appUser={mainStore.appUser}/>
+				<Home id='home' go={go}/>
 				<Persik id='persik' go={go} />
 				<Schedule id="schedule" go={go} setPopout={setPopout} schedule={mainStore.schedule} setSchedule={setSchedule} group={mainStore.appUser.group} appUser={mainStore.appUser} createError={createError}/>
 				<Settings id="settings" go={go} appUser={mainStore.appUser} setModal={mainStore.setModal} snackbar={snackbar}/>
@@ -266,10 +276,45 @@ const App = () => {
 				<Error id='error' err={mainStore.error} go={go}/>
 				<Progress id="progress" go={go} createError={createError} setPopout={setPopout} appUser={mainStore.appUser} setDetailed={mainStore.setDetailed} progress={mainStore.progress} setProgress={mainStore.setProgress}/>
 				<News id="news" go={go} />
+				<Profile id="profile" go={go} />
 
 				<AdminMenu id="adminMenu" go={go} />
 				<LastVisit id="lastVisit" go={go} setPopout={mainStore.setPopout}/>
 			</View>
+			<Epic activeStory={activeStory} tabbar={
+          <Tabbar>
+            <TabbarItem
+              onClick={onStoryChange}
+              selected={activeStory === 'schedule'}
+              data-story="schedule"
+              text="Расписание"
+            ><Icon16ClockOurline /></TabbarItem>
+            <TabbarItem
+              onClick={onStoryChange}
+              selected={activeStory === 'progress'}
+              data-story="progress"
+              text="Зачётка"
+            ><Icon20EducationOutline/></TabbarItem>
+            <TabbarItem
+              onClick={onStoryChange}
+              selected={activeStory === 'home'}
+              data-story="home"
+              text="Главная"
+            ><Icon20HomeOutline/></TabbarItem>
+            <TabbarItem
+              onClick={onStoryChange}
+              selected={activeStory === 'news'}
+              data-story="news"
+              text="Новости"
+            ><Icon20NewsfeedOutline /></TabbarItem>
+            <TabbarItem
+              onClick={onStoryChange}
+              selected={activeStory === 'profile'}
+              data-story="profile"
+              text="Профиль"
+            ><Icon20ServicesOutline/></TabbarItem>
+          </Tabbar>
+        }/>
 		</Provider>
 	);
 }

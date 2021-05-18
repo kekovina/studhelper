@@ -57,6 +57,7 @@ const Settings = ({ appUser, id, go, setModal, snackbar }) => {
 		<SimpleCell before={<Icon28PaletteOutline width={28}/>} indicator={joke && joke[1] + '%'} disabled>
 			{joke && joke[0]}
 		</SimpleCell>
+		
 	</Group>
 	{snackbar}
 	</Panel>)
