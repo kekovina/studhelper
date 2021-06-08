@@ -30,7 +30,7 @@ const App = () => {
 	const [valid, setValid] = useState(false)
 	const [textForm, setTextForm] = useState('')
 	const [snackbar, setSnackbar] = useState(null)
-	const [popout, setPopout] = useState(<ScreenSpinner size='large' />)
+	// const [popout, setPopout] = useState(<ScreenSpinner size='large' />)
 	
 	const sendNotification = (text) => {
 		return bridge.send('VKWebAppGetUserInfo').then(res => bridge.send("VKWebAppCallAPIMethod", {
@@ -59,7 +59,7 @@ const App = () => {
 						params = { themeSched:  args[1]}
 						break;
 				}
-				setPopout(<ScreenSpinner size='large' />)
+				mainStore.setPopout(<ScreenSpinner size='large' />)
 				axios.get(`${serverURL}/updateUser`, {params: {
 					id: mainStore.fetchedUser.id,
 					...params
@@ -75,7 +75,7 @@ const App = () => {
 						mainStore.setAppUser({group: res.data.updated.group || mainStore.appUser.group, num: res.data.updated.num || mainStore.appUser.num,
 							themeSched: res.data.updated.themeSched || mainStore.appUser.themeSched, status: `группы ${res.data.updated.group || mainStore.appUser.group}`})
 					}
-					setPopout(null)
+					mainStore.setPopout(null)
 				})
 			}
 			setValid(false)
@@ -105,30 +105,7 @@ const App = () => {
 				return res.id
 			})
 		}
-		const getUser = async (id) => {
-			setPopout(<ScreenSpinner size='large' />)
-			return await axios.get(`${serverURL}/getUser`, {params: {id: id}})
-			.then(res => {
-				if(!res.data.err){
-					if(res.data.user){
-						mainStore.setAppUser({group: res.data.user.group, num: res.data.user.num, status: `группы ${res.data.user.group}`, 
-										themeSched: res.data.user.themeSched || 0})
-					}else{
-						mainStore.setActivePanel('start')
-					}
-				}else{
-					mainStore.setActivePanel('start')
-				}
-			})
-		}
-		fetchData().then(getUser).then(() => {
-			mainStore.getSchedule().then(res => {
-				if(res){
-					createError({type: 1, code: res, descr: res.text})
-				}
-				setPopout(null)
-			})
-		})
+		fetchData().then(mainStore.initApp)
 		.then((id) => {
 			bridge.send("VKWebAppCallAPIMethod", {
 				"method": "apps.isNotificationsAllowed",
@@ -240,34 +217,35 @@ const App = () => {
 		}
 	};
 	const createUser = (errorHandler, form) => {
-		setPopout(<ScreenSpinner size='large' />)
-		axios.get(`${serverURL}/newUser`, {params: {id: mainStore.fetchedUser.id, group: form.group, num: form.num}})
+		mainStore.setPopout(<ScreenSpinner size='large' />)
+		return axios.get(`${serverURL}/newUser`, {params: {id: mainStore.fetchedUser.id, group: form.group, num: form.num}})
 			.then(res => {
 				if(!res.data.err){
 					mainStore.setAppUser({group: res.data.user.group, num: res.data.user.num})
-					setPopout(null)
+					mainStore.setPopout(null)
 					mainStore.setActivePanel('home')
 				} else {
 					errorHandler({header: "Ошибка сервера", text: res.data.text})
-					setPopout(null)
+					mainStore.setPopout(null)
 				}
 			})
+		
 	}
 
 	return (
 		<Provider store={mainStore}>
-			<View activePanel={mainStore.activePanel} popout={popout} modal={modalRoot}>
-				<Start id="start" createError={createError} createUser={createUser} setPopout={mainStore.setPopout} setActivePanel={mainStore.setActivePanel} setAppUser={mainStore.setAppUser} vku={mainStore.fetchedUser}/>
+			<View activePanel={mainStore.activePanel} popout={mainStore.popout} modal={modalRoot}>
+				<Start id="start" initApp={mainStore.initApp} createError={createError} createUser={createUser} setPopout={mainStore.setPopout} setActivePanel={mainStore.setActivePanel} setAppUser={mainStore.setAppUser} vku={mainStore.fetchedUser}/>
 				<Home id='home' fetchedUser={mainStore.fetchedUser} go={go} appUser={mainStore.appUser}/>
 				<Persik id='persik' go={go} />
-				<Schedule id="schedule" go={go} setPopout={setPopout} schedule={mainStore.schedule} setSchedule={setSchedule} group={mainStore.appUser.group} appUser={mainStore.appUser} createError={createError}/>
+				<Schedule id="schedule" go={go} setPopout={mainStore.setPopout} schedule={mainStore.schedule} setSchedule={setSchedule} group={mainStore.appUser.group} appUser={mainStore.appUser} createError={createError}/>
 				<Settings id="settings" go={go} appUser={mainStore.appUser} setModal={mainStore.setModal} snackbar={snackbar}/>
 				<DetailedProgress id="detailedprogress" go={go} data={mainStore.detailed}/>
 				<Error id='error' err={mainStore.error} go={go}/>
-				<Progress id="progress" go={go} createError={createError} setPopout={setPopout} appUser={mainStore.appUser} setDetailed={mainStore.setDetailed} progress={mainStore.progress} setProgress={mainStore.setProgress}/>
+				<Progress id="progress" go={go} createError={createError} setPopout={mainStore.setPopout} appUser={mainStore.appUser} setDetailed={mainStore.setDetailed} progress={mainStore.progress} setProgress={mainStore.setProgress}/>
 				<News id="news" go={go} />
 
-				<AdminMenu id="adminMenu" go={go} />
+				<AdminMenu id="adminMenu" go={go} snackbar={snackbar} setSnackbar={setSnackbar}/>
 				<LastVisit id="lastVisit" go={go} setPopout={mainStore.setPopout}/>
 			</View>
 		</Provider>

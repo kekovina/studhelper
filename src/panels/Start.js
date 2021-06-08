@@ -24,7 +24,10 @@ const Start = props => {
                 props.setActivePanel('home')
                 props.setAppUser({group: form.num, num: form.aff, status: `группы ${res.data.user.group}`})
             }
-        }).catch(e => {
+        }).then(
+            props.initApp(props.vku.id)
+        )
+        .catch(e => {
             props.setPopout(null)
         })
     }

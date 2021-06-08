@@ -2,6 +2,11 @@ import { action, configure, observable, makeObservable, computed } from 'mobx'
 import { serverURL } from '../config'
 import axios from 'axios'
 import { getDate, getTime } from '../utils/functions'
+import React from 'react';
+import ScreenSpinner from '@vkontakte/vkui/dist/components/ScreenSpinner/ScreenSpinner';
+
+
+const spinner = <ScreenSpinner size='large' />
 
 configure({ enforceActions: "always"})
 
@@ -19,18 +24,26 @@ class MainStore{
     error = null
     modal = null
     modalHistory = []
+    settings = {}
     get currentLesson(){
-      let date = getDate(new Date())
-      let day = this.schedule ? this.schedule.data.filter(item => item.date == date.mini)[0]?.schedule || null : null
-      let now = getTime(new Date())
-      // let now = getTime(new Date('2021-05-11 12:00'))
-      let res = day ? day.filter(item => (now <= item.end)).shift() : null
-      if(res){
-        let sched = day.filter(item => item.start == res.start)
-        let text = res.start > now ?  "Следующая пара" : "Сейчас идёт"
-        return { sched, text }
+      const get = () => {
+        let date = getDate(new Date())
+        let day = this.schedule ? this.schedule.data.filter(item => item.date == date.mini)[0]?.schedule || null : null
+        let now = getTime(new Date())
+        // let now = getTime(new Date('2021-05-11 12:00'))
+        let res = day ? day.filter(item => (now <= item.end)).shift() : null
+        if(res){
+          let sched = day.filter(item => item.start == res.start)
+          let text = res.start > now ?  "Следующая пара" : "Сейчас идёт"
+          return { sched, text }
+        }
+        return null
       }
-      return null
+      if(!this.settings.isExam){
+        return get()
+      } else {
+        return null
+      }
     }
     get analizationSchedule(){
       let day = null
@@ -62,6 +75,7 @@ class MainStore{
             theme: observable,
             currentLesson: computed,
             analizationSchedule: computed,
+            settings: observable,
 
             setActivePanel: action,
             setVkUser: action,
@@ -75,6 +89,7 @@ class MainStore{
             setModalHistory: action,
             setActiveModal: action,
             setTheme: action,
+            setSettings: action
         })
     }
     setActivePanel = value => this.activePanel = value
@@ -85,6 +100,7 @@ class MainStore{
             ...user
         }
     }
+    setSettings = settings => this.settings = settings
     setPopout = popout => this.popout = popout
     setProgress = progress => this.progress = progress
     setDetailed = detailed => this.detailed = detailed
@@ -99,6 +115,26 @@ class MainStore{
           }
           this.schedule = res.data.res.data
         })
+    }
+    initApp = async (id) => {
+      this.setPopout(spinner)
+      return await axios.get(`${serverURL}/init`, {params: {id: id}})
+			.then(res => {
+				if(!res.data.err){
+					if(res.data.user){
+						this.setAppUser({group: res.data.user.group, num: res.data.user.num, status: `группы ${res.data.user.group}`})
+						this.setSettings(res.data.settings)
+            this.schedule = {data: res.data.schedule ? res.data.schedule.data : null, updated: res.data.schedule ? res.data.schedule.updated: null }
+            console.log(res.data)
+					}else{
+						this.setActivePanel('start')
+					}
+				}else{
+					this.setActivePanel('start')
+				}
+        console.log(res)
+			})
+      .then(() => this.setPopout(null))
     }
     setError = error => this.error = error
     setModal = modal => this.modal = modal

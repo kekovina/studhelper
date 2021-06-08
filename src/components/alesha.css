@@ -6,6 +6,9 @@
     --lablast: #C65E188c;
     --pract: #2187A8;
     --practlast: #2187A88c;
+    --dz: #33bd1b8c;
+    --za4: #9d47c58c;
+    --exam: #d41c1c8c;
 }
 .subject{
     border-radius: 28px;
@@ -239,4 +242,24 @@
 }
 .subject.skeleton, .subject.home{
     margin: 5px 10px
+}
+
+/* сессия */
+
+.subject.dz .type{
+    background: linear-gradient(320.19deg, #bcce16 13.64%, #33bd1b 89.26%);
+    box-shadow: 0px 0px 10px var(--dz);
+}
+
+.subject.za4 .type{
+    background: linear-gradient(320.19deg, #b174ce 13.64%, #9d47c5 89.26%);
+    box-shadow: 0px 0px 10px var(--za4);
+}
+.subject.exam .type{
+    background: linear-gradient(320.19deg, #d14c4c 13.64%, #d41c1c 89.26%);
+    box-shadow: 0px 0px 10px var(--exam);
+}
+.subject.kurs .type{
+    background: linear-gradient(320.19deg, #c59c50 13.64%, #c2891f 89.26%);
+    box-shadow: 0px 0px 10px var(--exam);
 }

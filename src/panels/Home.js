@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import Panel from '@vkontakte/vkui/dist/components/Panel/Panel';
 import PanelHeader from '@vkontakte/vkui/dist/components/PanelHeader/PanelHeader';
 import Header from '@vkontakte/vkui/dist/components/Header/Header';
 import Avatar from '@vkontakte/vkui/dist/components/Avatar/Avatar';
+import { Icon28FireCircleFillRed } from '@vkontakte/icons';
 import { Icon16ClockOurline, Icon20Users, Icon20EducationOutline, Icon20NewsfeedOutline, Icon24Settings, Icon20ServicesOutline } from '@vkontakte/icons'
 import Alesha from '../components/Alesha'
 import NextLessons from '../components/NextLessons'
@@ -13,7 +14,8 @@ import { inject, observer } from 'mobx-react';
 
 const admins = [503012833]
 
-const Home = inject('store')(observer(({ id, go, fetchedUser, appUser, store }) => (
+const Home = inject('store')(observer(({ id, go, fetchedUser, appUser, store }) => {
+	return (
 	<Panel id={id}>
 		<PanelHeader>StudHelper</PanelHeader>
 		{fetchedUser &&
@@ -37,8 +39,9 @@ const Home = inject('store')(observer(({ id, go, fetchedUser, appUser, store }) 
 		
 		<div className={`btn-group ${store.theme}`}>
 			<div className="btn schedule" onClick={go} data-to="schedule">
-				<Icon16ClockOurline />
-				<div>Расписание</div>
+				
+				{store.settings.isExam ? <Icon28FireCircleFillRed/> : <Icon16ClockOurline />}
+				<div>{store.settings.isExam ? 'Сессия' : 'Расписание'}</div>
 			</div>
 			<div className="btn progress" onClick={go} data-to="progress">
 				<Icon20EducationOutline/>
@@ -66,7 +69,8 @@ const Home = inject('store')(observer(({ id, go, fetchedUser, appUser, store }) 
 			</a>
 		</div>
 	</Panel>
-)))
+)}
+		))
 
 Home.propTypes = {
 	id: PropTypes.string.isRequired,
