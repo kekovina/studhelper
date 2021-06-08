@@ -22,7 +22,6 @@ const Schedule = inject("store")(observer(({ store, setPopout, id, go }) => {
 	const [selectedDate, setSelectedDate] = useState(getDate);
 	const [selectedSchedule, setSelectedSchedule] = useState(null)
 	const { schedule } = store
-	console.log(schedule)
 
 	
 	var weeks = 0;

@@ -27,20 +27,20 @@
     flex-wrap: wrap;
     justify-content: space-between;
     margin: 10px 15px;
+    background-color: transparent;
+    backdrop-filter: blur(15px);
 }
-
 .card-block.dark .btn{
-    background: #19191A;
-    box-shadow: 7px 7px 15px #0F0F10, -7px -7px 15px #262627;
     color: white
 }
-
-
 .card-block.dark .btn.admin{
     background-color:#2d2d2e
 }
-
 .card-block.dark .btn.link{
     text-decoration: none;
-    background-color: #2d2d2e;
+}
+.wrapper{
+    background-image: url('../img/background.jpg');
+    background-size: cover;
+    height: 100%
 }

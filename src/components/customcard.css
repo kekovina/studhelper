@@ -13,11 +13,10 @@
 }
 .card-block{
     background-color: #f9f9f9;
-    padding: 5px;
-    margin: 10px 0
+    margin: 0 10px
 }
 .card-block.dark{
-    background-color: #363738;
+    background-color: transparent;
 }
 .customcard{
     padding: 15px;

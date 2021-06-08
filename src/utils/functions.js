@@ -51,4 +51,17 @@ const getTime = (time) => {
 	return `${((time.getHours()+'').length < 2 ? '0' : '')+time.getHours()}:${((time.getMinutes()+'').length < 2 ? '0' : '')+time.getMinutes()}`
 }
 
-module.exports = { prepareDate, getDate, getWeek, getTime }
+const timeDiff = (goal, format) => {
+	const now = new Date()
+	const left = Math.abs(Math.floor((goal - now) / 1000))
+	const days = Math.floor( left / 60 / 60 / 24)
+	const h = Math.floor( left / 60 / 60 ) - days * 24
+	const m = Math.floor( left / 60 ) - days * 24 * 60 - h * 60
+	const s = Math.floor( left ) - days * 24 * 60 * 60 - h * 60 * 60 - m * 60 
+	const hh = h % 100 < 10 ? '0' + h : h
+	const mm = m % 100 < 10 ? '0' + m : m
+	const ss = s % 100 < 10 ? '0' + s : s
+	return format.replace('dd', days).replace('hh', hh).replace('mm', mm).replace('ss', ss)
+}
+
+module.exports = { prepareDate, getDate, getWeek, getTime, timeDiff }

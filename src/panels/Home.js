@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import Panel from '@vkontakte/vkui/dist/components/Panel/Panel';
 import PanelHeader from '@vkontakte/vkui/dist/components/PanelHeader/PanelHeader';
@@ -10,26 +10,40 @@ import CardItem from '../components/CardItem'
 
 import './home.css'
 import { inject, observer } from 'mobx-react';
+import { timeDiff } from '../utils/functions';
 
 
 
 const Home = inject('store')(observer(({ id, go, fetchedUser, appUser, store }) => {
+	const [ timeTo, setTimeTo ] = useState(null)
+	useEffect(() => {
+		let interval = setInterval(() => {
+			setTimeTo(timeDiff(new Date('2021-05-31 10:00'), 'hh ч. mm мин. ss сек.'))
+		}, 1000)
+		return () => {
+			clearInterval(interval)
+		}
+	}, [])
 	return (
 	<Panel id={id}>
 		<PanelHeader>StudHelper</PanelHeader>
-		{
-			store.currentLesson && (<Header mode="secondary">{store.currentLesson && store.currentLesson.text}</Header>)
-		}
-		{
-			store.currentLesson && (store.currentLesson.sched.map(item => <Alesha subject={item} status='future' skeleton={!store.schedule} home/>))
-		}
-		{
-			//!store.currentLesson && store.analizationSchedule && <NextLessons data={store.analizationSchedule}/>
-		}
-		<div className="card-block">
-			<CardItem size={2} >2</CardItem>
-			<CardItem size={1} >1</CardItem>
-			<CardItem size={3} >3</CardItem>
+		<div className="wrapper">
+			{
+				store.currentLesson && (<Header mode="secondary">{store.currentLesson && store.currentLesson.text}</Header>)
+			}
+			{
+				store.currentLesson && (store.currentLesson.sched.map(item => <Alesha subject={item} status='future' skeleton={!store.schedule} home/>))
+			}
+			{
+				//!store.currentLesson && store.analizationSchedule && <NextLessons data={store.analizationSchedule}/>
+			}
+			<div className={`card-block ${store.theme}`}>
+				<CardItem size={2}  theme={store.theme}>До следующей пары: {timeTo || 'loading...'}</CardItem>
+				<CardItem stretch theme={store.theme}></CardItem>
+			</div>
+			<div className={`card-block ${store.theme}`}>
+				<CardItem stretch theme={store.theme}>3</CardItem>
+			</div>
 		</div>
 	</Panel>
 )}))
