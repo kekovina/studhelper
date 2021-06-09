@@ -36,7 +36,7 @@ const Settings = ({ appUser, id, go, setModal, snackbar }) => {
 	  }
 	return (<Panel id={id}>
 		<PanelHeader
-			left={<PanelHeaderButton onClick={go} data-to="home">
+			left={<PanelHeaderButton onClick={() => window.history.back()}>
 				{osName === IOS ? <Icon28ChevronBack/> : <Icon24Back/>}
 			</PanelHeaderButton>}
 		>

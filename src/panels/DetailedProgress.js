@@ -27,7 +27,7 @@ const getKM = id => {
 const DetailedProgress = ({ id, go, data }) => (
 	<Panel id={id}>
 		<PanelHeader
-			left={<PanelHeaderButton onClick={go} data-to="progress">
+			left={<PanelHeaderButton onClick={() => window.history.back()}>
 				{osName === IOS ? <Icon28ChevronBack/> : <Icon24Back/>}
 			</PanelHeaderButton>}
 		>

@@ -12,6 +12,8 @@ configure({ enforceActions: "always"})
 
 class MainStore{
     activePanel = 'home'
+    screenHistory = []
+
     fetchedUser = null
     theme = 'light'
     appUser = {
@@ -63,6 +65,7 @@ class MainStore{
     constructor(){
         makeObservable(this, {
             activePanel: observable,
+            screenHistory: observable,
             fetchedUser: observable,
             appUser: observable,
             popout: observable,
@@ -78,6 +81,7 @@ class MainStore{
             settings: observable,
 
             setActivePanel: action,
+            updateScreenHistory: action,
             setVkUser: action,
             setAppUser: action,
             setPopout: action,
@@ -100,6 +104,7 @@ class MainStore{
             ...user
         }
     }
+    updateScreenHistory = history => this.screenHistory = history
     setSettings = settings => this.settings = settings
     setPopout = popout => this.popout = popout
     setProgress = progress => this.progress = progress

@@ -211,6 +211,9 @@ const App = () => {
 	)
 	const go = e => {
 		mainStore.setActivePanel(e.currentTarget.dataset.to);
+		goForward(e.currentTarget.dataset.to)
+		window.history.pushState({panel: e.currentTarget.dataset.to}, `${e.currentTarget.dataset.to}`)
+		mainStore.setPopout(null)
 		if(e.currentTarget.dataset.km){
 			mainStore.setDetailed(JSON.parse(e.currentTarget.dataset.km))
 		}
@@ -231,12 +234,47 @@ const App = () => {
 		
 	}
 
+	const goBack = () => {
+		const history = [...mainStore.screenHistory];
+		history.pop();
+		const activePanel = history[history.length - 1];
+		if (activePanel === 'main') {
+		  bridge.send('VKWebAppEnableSwipeBack');
+		}
+		
+	}
+
+	const goForward = (activePanel) => {
+		const history = [...mainStore.screenHistory];
+		history.push(activePanel);
+		if (mainStore.activePanel === 'main') {
+		  bridge.send('VKWebAppDisableSwipeBack');
+		}
+		mainStore.updateScreenHistory(history);
+		mainStore.setActivePanel(activePanel)
+	  }
+	const menu = e => {
+		if(e.state){
+			mainStore.setActivePanel(e.state.panel)
+		} else {
+			mainStore.setActivePanel(`home`)
+			window.history.pushState( { panel: 'home'}, `home` )
+		}
+	}
+	useEffect(() => {
+		window.addEventListener('popstate', e => e.preventDefault() & menu(e))
+		window.history.pushState({ panel: 'home'}, `home`)
+		return () => {
+			window.removeEventListener('popstate')
+		}
+	}, [])
+
 	return (
 		<ConfigProvider>
 			<AdaptivityProvider>
 				<AppRoot mode="full">
 					<Provider store={mainStore}>
-						<View activePanel={mainStore.activePanel} popout={mainStore.popout} modal={modalRoot}>
+						<View activePanel={mainStore.activePanel} popout={mainStore.popout} modal={modalRoot} onSwipeBack={goBack} history={mainStore.screenHistory}>
 							<Start id="start" initApp={mainStore.initApp} createError={createError} createUser={createUser} setPopout={mainStore.setPopout} setActivePanel={mainStore.setActivePanel} setAppUser={mainStore.setAppUser} vku={mainStore.fetchedUser}/>
 							<Home id='home' fetchedUser={mainStore.fetchedUser} go={go} appUser={mainStore.appUser}/>
 							<Schedule id="schedule" go={go} setPopout={mainStore.setPopout} schedule={mainStore.schedule} setSchedule={setSchedule} group={mainStore.appUser.group} appUser={mainStore.appUser} createError={createError}/>

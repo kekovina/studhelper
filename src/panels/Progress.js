@@ -58,7 +58,7 @@ const Progress = ({ setPopout, go, id, appUser, progress, setProgress, createErr
 	return (
 	<Panel id={id}>
 		<PanelHeader
-			left={<PanelHeaderButton onClick={go} data-to="home">
+			left={<PanelHeaderButton onClick={() => window.history.back()}>
 				{osName === IOS ? <Icon28ChevronBack/> : <Icon24Back/>}
 			</PanelHeaderButton>}
 		>

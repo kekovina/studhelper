@@ -35,7 +35,7 @@ const Error = props => {
 	const scheme = document.body.attributes.getNamedItem("scheme").value
 	return (<Panel id={props.id}>
 		<PanelHeader
-			left={<PanelHeaderButton onClick={props.go} data-to={props.err.back}>
+			left={<PanelHeaderButton onClick={() => window.history.back()}>
 				{osName === IOS ? <Icon28ChevronBack/> : <Icon24Back/>}
 			</PanelHeaderButton>}
 		/>
