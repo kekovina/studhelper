@@ -1,9 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { platform, IOS } from '@vkontakte/vkui';
-import Panel from '@vkontakte/vkui/dist/components/Panel/Panel';
-import PanelHeader from '@vkontakte/vkui/dist/components/PanelHeader/PanelHeader';
-import PanelHeaderButton from '@vkontakte/vkui/dist/components/PanelHeaderButton/PanelHeaderButton';
+import { platform, IOS, Panel, PanelHeader, PanelHeaderButton } from '@vkontakte/vkui';
 import Icon28ChevronBack from '@vkontakte/icons/dist/28/chevron_back';
 import Icon24Back from '@vkontakte/icons/dist/24/back';
 
@@ -42,7 +39,7 @@ const Error = props => {
 				{osName === IOS ? <Icon28ChevronBack/> : <Icon24Back/>}
 			</PanelHeaderButton>}
 		/>
-            <img src={sticker} class="Persik" />
+            <img src={sticker} style={{margin: '0 auto', width: '200px'}} />
             <div className="err-header">{props.err.type ? props.err.type == 1 ? props.err.name : "Внезапная ошибка" : "Сервер уснул"}</div>
             <div className="err-descr">{props.err.type ? props.err.descr : "Мы скоро всё обязательно починим"}</div>
             <div className="err-descr-sub">Пожалуйста, заскринь и сообщи <a href="http://vk.com/kekovinya">Антону</a> о произошедшем</div>

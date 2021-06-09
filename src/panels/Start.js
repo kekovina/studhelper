@@ -1,9 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { platform, PanelHeader, IOS, Input, Group, FormLayout, Button } from '@vkontakte/vkui';
-import Panel from '@vkontakte/vkui/dist/components/Panel/Panel';
+import { platform, PanelHeader, IOS, Input, Group, FormLayout, Button, Panel, ScreenSpinner } from '@vkontakte/vkui';
 import { useState } from 'react'
-import ScreenSpinner from '@vkontakte/vkui/dist/components/ScreenSpinner/ScreenSpinner';
 import axios from 'axios';
 
 const osName = platform();

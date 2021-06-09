@@ -1,9 +1,6 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
-import Panel from '@vkontakte/vkui/dist/components/Panel/Panel';
-import PanelHeader from '@vkontakte/vkui/dist/components/PanelHeader/PanelHeader';
-import Header from '@vkontakte/vkui/dist/components/Header/Header';
-import Avatar from '@vkontakte/vkui/dist/components/Avatar/Avatar';
+import { Panel, PanelHeader, Header, Avatar } from '@vkontakte/vkui'
 import { Icon28FireCircleFillRed } from '@vkontakte/icons';
 import { Icon16ClockOurline, Icon20Users, Icon20EducationOutline, Icon20NewsfeedOutline, Icon24Settings, Icon20ServicesOutline } from '@vkontakte/icons'
 import Alesha from '../components/Alesha'

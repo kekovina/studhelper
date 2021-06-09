@@ -1,9 +1,6 @@
 import React, { useState, useEffect} from 'react';
 import PropTypes from 'prop-types';
-import { platform, IOS, Gallery, Group, Header, CardScroll, Card, ScreenSpinner } from '@vkontakte/vkui';
-import Panel from '@vkontakte/vkui/dist/components/Panel/Panel';
-import PanelHeader from '@vkontakte/vkui/dist/components/PanelHeader/PanelHeader';
-import PanelHeaderButton from '@vkontakte/vkui/dist/components/PanelHeaderButton/PanelHeaderButton';
+import { platform, IOS, Gallery, Group, Header, CardScroll, Card, ScreenSpinner, Panel, PanelHeader, PanelHeaderButton } from '@vkontakte/vkui';
 import Icon28ChevronBack from '@vkontakte/icons/dist/28/chevron_back';
 import Icon24Back from '@vkontakte/icons/dist/24/back';
 

@@ -1,10 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { platform, IOS, CardGrid } from '@vkontakte/vkui';
+import { platform, IOS, CardGrid, Panel, PanelHeader, PanelHeaderButton } from '@vkontakte/vkui';
 import NewsCard from '../components/NewsCard'
 import bridge from '@vkontakte/vk-bridge';
-import Panel from '@vkontakte/vkui/dist/components/Panel/Panel';
-import PanelHeader from '@vkontakte/vkui/dist/components/PanelHeader/PanelHeader';
-import PanelHeaderButton from '@vkontakte/vkui/dist/components/PanelHeaderButton/PanelHeaderButton';
 import Icon28ChevronBack from '@vkontakte/icons/dist/28/chevron_back';
 import Icon24Back from '@vkontakte/icons/dist/24/back';
 

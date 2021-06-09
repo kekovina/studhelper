@@ -3,7 +3,7 @@ import { Icon56NotificationOutline, Icon24Done, Icon24Cancel } from '@vkontakte/
 import bridge from '@vkontakte/vk-bridge';
 import View from '@vkontakte/vkui/dist/components/View/View';
 import ScreenSpinner from '@vkontakte/vkui/dist/components/ScreenSpinner/ScreenSpinner';
-import { Avatar, Snackbar, ModalRoot, ModalPage, ModalPageHeader, PanelHeaderButton, FormLayout, Group, Text, Input, Button, Radio } from '@vkontakte/vkui'
+import { withAdaptivity, ConfigProvider, AdaptivityProvider, AppRoot, Avatar, Snackbar, ModalRoot, ModalPage, ModalPageHeader, PanelHeaderButton, FormLayout, Group, Text, Input, Button, Radio } from '@vkontakte/vkui'
 import '@vkontakte/vkui/dist/vkui.css';
 import axios from 'axios'
 import { observer, Provider } from 'mobx-react'
@@ -13,7 +13,6 @@ import mainStore from './store/mainStore'
 
 
 import Home from './panels/Home';
-import Persik from './panels/Persik';
 import Schedule from './panels/Schedule';
 import Settings from './panels/Settings'
 import Progress from './panels/Progress'
@@ -233,24 +232,29 @@ const App = () => {
 	}
 
 	return (
-		<Provider store={mainStore}>
-			<View activePanel={mainStore.activePanel} popout={mainStore.popout} modal={modalRoot}>
-				<Start id="start" initApp={mainStore.initApp} createError={createError} createUser={createUser} setPopout={mainStore.setPopout} setActivePanel={mainStore.setActivePanel} setAppUser={mainStore.setAppUser} vku={mainStore.fetchedUser}/>
-				<Home id='home' fetchedUser={mainStore.fetchedUser} go={go} appUser={mainStore.appUser}/>
-				<Persik id='persik' go={go} />
-				<Schedule id="schedule" go={go} setPopout={mainStore.setPopout} schedule={mainStore.schedule} setSchedule={setSchedule} group={mainStore.appUser.group} appUser={mainStore.appUser} createError={createError}/>
-				<Settings id="settings" go={go} appUser={mainStore.appUser} setModal={mainStore.setModal} snackbar={snackbar}/>
-				<DetailedProgress id="detailedprogress" go={go} data={mainStore.detailed}/>
-				<Error id='error' err={mainStore.error} go={go}/>
-				<Progress id="progress" go={go} createError={createError} setPopout={mainStore.setPopout} appUser={mainStore.appUser} setDetailed={mainStore.setDetailed} progress={mainStore.progress} setProgress={mainStore.setProgress}/>
-				<News id="news" go={go} />
+		<ConfigProvider>
+			<AdaptivityProvider>
+				<AppRoot mode="full">
+					<Provider store={mainStore}>
+						<View activePanel={mainStore.activePanel} popout={mainStore.popout} modal={modalRoot}>
+							<Start id="start" initApp={mainStore.initApp} createError={createError} createUser={createUser} setPopout={mainStore.setPopout} setActivePanel={mainStore.setActivePanel} setAppUser={mainStore.setAppUser} vku={mainStore.fetchedUser}/>
+							<Home id='home' fetchedUser={mainStore.fetchedUser} go={go} appUser={mainStore.appUser}/>
+							<Schedule id="schedule" go={go} setPopout={mainStore.setPopout} schedule={mainStore.schedule} setSchedule={setSchedule} group={mainStore.appUser.group} appUser={mainStore.appUser} createError={createError}/>
+							<Settings id="settings" go={go} appUser={mainStore.appUser} setModal={mainStore.setModal} snackbar={snackbar}/>
+							<DetailedProgress id="detailedprogress" go={go} data={mainStore.detailed}/>
+							<Error id='error' err={mainStore.error} go={go}/>
+							<Progress id="progress" go={go} createError={createError} setPopout={mainStore.setPopout} appUser={mainStore.appUser} setDetailed={mainStore.setDetailed} progress={mainStore.progress} setProgress={mainStore.setProgress}/>
+							<News id="news" go={go} />
 
-				<AdminMenu id="adminMenu" go={go} snackbar={snackbar} setSnackbar={setSnackbar}/>
-				<LastVisit id="lastVisit" go={go} setPopout={mainStore.setPopout}/>
-			</View>
-		</Provider>
+							<AdminMenu id="adminMenu" go={go} snackbar={snackbar} setSnackbar={setSnackbar}/>
+							<LastVisit id="lastVisit" go={go} setPopout={mainStore.setPopout}/>
+						</View>
+					</Provider>
+				</AppRoot>
+			</AdaptivityProvider>
+		</ConfigProvider>
 	);
 }
 
-export default observer(App);
+export default withAdaptivity(observer(App), {viewWidth: true});
 
