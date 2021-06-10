@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { platform, PanelHeader, IOS, Input, Group, FormLayout, Button, Panel, ScreenSpinner } from '@vkontakte/vkui';
+import { platform, PanelHeader, IOS, Input, Group, FormLayout, Button, Panel, ScreenSpinner, FormItem } from '@vkontakte/vkui';
 import { useState } from 'react'
 import axios from 'axios';
 
@@ -54,23 +54,30 @@ const Start = props => {
     <PanelHeader>Знакомство</PanelHeader>
         <Group>
         <FormLayout>
-              <Input
-                type="text"
-                name="num"
-                onChange={onChange}
+            <FormItem
                 top="Номер группы" 
                 status={validNum ? 'valid' : 'error'}
-                bottom={validNum ? 'Мне нравится твоя группа' : 'Некорректный номер группы'}
-              />
+                bottom={validNum ? 'Мне нравится твоя группа' : 'Некорректный номер группы'}>
+                <Input
+                    type="text"
+                    name="num"
+                    onChange={onChange}
+                />
+            </FormItem>
+            <FormItem
+                top="Номер зачётки" 
+                status={validAff ? 'valid' : 'error'}
+                bottom={validAff ? 'Полагаю, лучшая зачётка!' : 'Некорректный номер зачётки'}>
               <Input
                 type="text"
                 name="aff"
                 onChange={onChange}
-                top="Номер зачётки" 
-                status={validAff ? 'valid' : 'error'}
-                bottom={validAff ? 'Полагаю, лучшая зачётка!' : 'Некорректный номер зачётки'}
               />
-              {validAff && validNum && <Button mode="secondary" onClick={register}>Войти</Button>}
+            </FormItem>
+              
+              {validAff && validNum && <FormItem>
+                <Button size='m' onClick={register} stretched>Войти</Button>
+                  </FormItem>}
         </FormLayout>
     </Group>
     </Panel>);

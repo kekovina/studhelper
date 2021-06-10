@@ -1,0 +1,52 @@
+.hello_wrap{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+.hello_wrap svg{
+    animation: rotate 3s infinite linear;
+    transform-origin: 0px 0px;
+    margin-left: 18px;
+    
+} 
+.hello_wrap .vkuiIcon{
+    position: relative;
+}
+.app_status{
+    font-size: 18px;
+    margin-top: 20px;
+}
+.app_status p{
+    text-align: center;
+    line-height: 5px;
+}
+/* .hello_wrap .vkuiIcon:after{
+    content: '';
+    position: absolute;
+    background-color: teal;
+    border: 1px solid red;
+    animation: pulse 3s cubic-bezier(.9,.24,.62,.79) infinite;;
+    border-radius: 50%;
+    top: -41px;
+    left: -23px;
+    width: 78px;
+    height: 78px
+} */
+
+@keyframes rotate {
+    100%{
+        transform: rotate(360deg)
+    }
+}
+@keyframes pulse {
+    from{
+        transform: scale(0);
+        opacity: 1;
+    }
+    to{
+        transform: scale(1);
+        opacity: 0
+    }
+}

@@ -11,15 +11,17 @@ const spinner = <ScreenSpinner size='large' />
 configure({ enforceActions: "always"})
 
 class MainStore{
-    activePanel = 'home'
+    activePanel = 'hello'
     screenHistory = []
+    loadingAppStatus = {code: 777, text: ["Устанавливаю связь с космосом"]}
+
 
     fetchedUser = null
     theme = 'light'
     appUser = {
         group: ""
     }
-    popout = "<ScreenSpinner size='large' />"
+    popout = null
     progress = null
     detailed = null
     schedule = null
@@ -79,7 +81,9 @@ class MainStore{
             currentLesson: computed,
             analizationSchedule: computed,
             settings: observable,
+            loadingAppStatus: observable,
 
+            updateLoadingAppStatus: action,
             setActivePanel: action,
             updateScreenHistory: action,
             setVkUser: action,
@@ -104,6 +108,7 @@ class MainStore{
             ...user
         }
     }
+    updateLoadingAppStatus = status => this.loadingAppStatus = {...this.loadingAppStatus, ...status}
     updateScreenHistory = history => this.screenHistory = history
     setSettings = settings => this.settings = settings
     setPopout = popout => this.popout = popout
@@ -122,7 +127,6 @@ class MainStore{
         })
     }
     initApp = async (id) => {
-      this.setPopout(spinner)
       return await axios.get(`${serverURL}/init`, {params: {id: id}})
 			.then(res => {
 				if(!res.data.err){
@@ -130,12 +134,12 @@ class MainStore{
 						this.setAppUser({group: res.data.user.group, num: res.data.user.num, status: `группы ${res.data.user.group}`})
 						this.setSettings(res.data.settings)
             this.schedule = {data: res.data.schedule ? res.data.schedule.data : null, updated: res.data.schedule ? res.data.schedule.updated: null }
-            console.log(res.data)
+            this.updateLoadingAppStatus({code: 1, text: [`С возвращением, ${this.fetchedUser.first_name}!`]})
 					}else{
-						this.setActivePanel('start')
+            this.updateLoadingAppStatus({code: 0, text: [`Привет, ${this.fetchedUser.first_name}!`, `Ты впервые здесь? Расскажи о себе`]})
 					}
 				}else{
-					this.setActivePanel('start')
+          this.updateLoadingAppStatus({code: 2, text: ['Возникла проблема при старте приложения :(']})
 				}
         console.log(res)
 			})

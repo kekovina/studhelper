@@ -20,6 +20,8 @@ import Start from './panels/Start'
 import DetailedProgress from './panels/DetailedProgress'
 import Error from './panels/Error'
 import News from './panels/News'
+import Hello from './panels/Hello'
+
 import AdminMenu from './panels/AdminMenu'
 import LastVisit from './panels/admin/LastVisit'
 import { MODAL_CHANGE_GROUP, MODAL_CHANGE_NUM, MODAL_CHANGE_SCHED_THEME } from './utils/modals.js'
@@ -211,7 +213,6 @@ const App = () => {
 	)
 	const go = e => {
 		mainStore.setActivePanel(e.currentTarget.dataset.to);
-		goForward(e.currentTarget.dataset.to)
 		window.history.pushState({panel: e.currentTarget.dataset.to}, `${e.currentTarget.dataset.to}`)
 		mainStore.setPopout(null)
 		if(e.currentTarget.dataset.km){
@@ -234,29 +235,19 @@ const App = () => {
 		
 	}
 
-	const goBack = () => {
-		const history = [...mainStore.screenHistory];
-		history.pop();
-		const activePanel = history[history.length - 1];
-		if (activePanel === 'main') {
-		  bridge.send('VKWebAppEnableSwipeBack');
-		}
-		
-	}
+	
 
-	const goForward = (activePanel) => {
-		const history = [...mainStore.screenHistory];
-		history.push(activePanel);
-		if (mainStore.activePanel === 'main') {
-		  bridge.send('VKWebAppDisableSwipeBack');
-		}
-		mainStore.updateScreenHistory(history);
-		mainStore.setActivePanel(activePanel)
-	  }
+	
 	const menu = e => {
 		if(e.state){
+			if((mainStore.activePanel == 'home' && e.state.panel == 'start') || (mainStore.activePanel == 'start' && e.state.panel == 'home')){
+				return
+			}
 			mainStore.setActivePanel(e.state.panel)
 		} else {
+			if(mainStore.activePanel == 'start'){
+				return
+			}
 			mainStore.setActivePanel(`home`)
 			window.history.pushState( { panel: 'home'}, `home` )
 		}
@@ -274,7 +265,7 @@ const App = () => {
 			<AdaptivityProvider>
 				<AppRoot mode="full">
 					<Provider store={mainStore}>
-						<View activePanel={mainStore.activePanel} popout={mainStore.popout} modal={modalRoot} onSwipeBack={goBack} history={mainStore.screenHistory}>
+						<View activePanel={mainStore.activePanel} popout={mainStore.popout} modal={modalRoot} >
 							<Start id="start" initApp={mainStore.initApp} createError={createError} createUser={createUser} setPopout={mainStore.setPopout} setActivePanel={mainStore.setActivePanel} setAppUser={mainStore.setAppUser} vku={mainStore.fetchedUser}/>
 							<Home id='home' fetchedUser={mainStore.fetchedUser} go={go} appUser={mainStore.appUser}/>
 							<Schedule id="schedule" go={go} setPopout={mainStore.setPopout} schedule={mainStore.schedule} setSchedule={setSchedule} group={mainStore.appUser.group} appUser={mainStore.appUser} createError={createError}/>
@@ -283,6 +274,8 @@ const App = () => {
 							<Error id='error' err={mainStore.error} go={go}/>
 							<Progress id="progress" go={go} createError={createError} setPopout={mainStore.setPopout} appUser={mainStore.appUser} setDetailed={mainStore.setDetailed} progress={mainStore.progress} setProgress={mainStore.setProgress}/>
 							<News id="news" go={go} />
+
+							<Hello id="hello" go={go} />
 
 							<AdminMenu id="adminMenu" go={go} snackbar={snackbar} setSnackbar={setSnackbar}/>
 							<LastVisit id="lastVisit" go={go} setPopout={mainStore.setPopout}/>
