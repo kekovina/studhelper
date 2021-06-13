@@ -64,6 +64,14 @@ const Home = inject('store')(observer(({ id, go, fetchedUser, appUser, store }) 
 				<Icon20Users/>
 				<div>Наша<br/>группа</div>
 			</a>
+			<div className='btn' style={{width: '100%'}}>
+				Тест. модуля: 
+				<span>Ты в универе?</span> 
+				{store.coords.result ? `Да(${store.coords.where})` : `Нет`}
+				</div>
+			<div className='btn' style={{width: '100%'}}>
+			{!store.coords.result ? <span style={{textAlign: 'center'}}>Если результат ложный,<br/> заскринь координаты и <a href="http://vk.com/kekovinya">мне</a> в лс: {`${JSON.stringify(store.coords.coords)}`}</span> : null}
+			</div>
 		</div>
 	</Panel>
 )}

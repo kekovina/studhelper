@@ -26,13 +26,15 @@ import AdminMenu from './panels/AdminMenu'
 import LastVisit from './panels/admin/LastVisit'
 import { MODAL_CHANGE_GROUP, MODAL_CHANGE_NUM, MODAL_CHANGE_SCHED_THEME } from './utils/modals.js'
 
+const pointInPolygon = require('point-in-polygon')
+
 const App = () => {
 	const [schedule, setSchedule] = useState(null)
 	const [valid, setValid] = useState(false)
 	const [textForm, setTextForm] = useState('')
 	const [snackbar, setSnackbar] = useState(null)
-	// const [popout, setPopout] = useState(<ScreenSpinner size='large' />)
-	
+
+
 	const sendNotification = (text) => {
 		return bridge.send('VKWebAppGetUserInfo').then(res => bridge.send("VKWebAppCallAPIMethod", {
 			"method": "notifications.sendMessage",
@@ -83,7 +85,7 @@ const App = () => {
 			setTextForm('')
 			mainStore.setActiveModal(mainStore.modalHistory[mainStore.modalHistory.length - 2]);
 	};
-	
+	bridge.send("VKWebAppInit", {});
 	bridge.subscribe(({ detail: { type, data }}) => {
 		if (type === 'VKWebAppUpdateConfig') {
 			const theme = data.scheme ? data.scheme : 'client_light';
@@ -91,6 +93,8 @@ const App = () => {
 			schemeAttribute.value = theme
 			document.body.attributes.setNamedItem(schemeAttribute);
 			mainStore.setTheme(theme == "space_gray" ? "dark" : "light")
+		} else if(type === 'VKWebAppViewHide'){
+			console.log('закрыли')
 		}
 		
 	});
@@ -100,29 +104,47 @@ const App = () => {
 	}
 	useEffect(() => {
 		
+		bridge.send('VKWebAppGetGeodata').then(data => {
+			if(data.available){
+				let coords = [
+					['Гл./9й',[54.166817,37.588596], [54.165753, 37.587397], [54.166590, 37.585001], [54.167693, 37.586229]],
+					// ['дом', [54.213367,37.627497],[54.212861,37.627455],[54.212759, 37.628544], [54.213189, 37.628692]],
+					['5й', [54.173112, 37.591369], [54.172595, 37.592710], [54.173454, 37.593716], [54.173882, 37.592238]]
+				
+				]
+				let r = coords.map(coord => {
+					if(pointInPolygon([data.lat, data.long], coord.slice(1))){
+						return coord[0]
+					} 
+				})
+				let result = r.filter(i => i)
+				if(result.length){
+					mainStore.setCoords({coords: {lat: data.lat, long: data.long, acc: data.accuracy}, result: true, where: result[0]})
+				} else {
+					mainStore.setCoords({coords: {lat: data.lat, long: data.long, acc: data.accuracy}, result: false, where: false})
+				}
+			}else{
+				mainStore.setCoords({coords: {}, where: false, result: 'Геолокация недоступна'})
+			}
+		})
 		async function fetchData() {
 			return await bridge.send('VKWebAppGetUserInfo').then(res => {
 				mainStore.setVkUser(res);
 				return res.id
 			})
 		}
-		fetchData().then(mainStore.initApp)
-		.then((id) => {
-			bridge.send("VKWebAppCallAPIMethod", {
-				"method": "apps.isNotificationsAllowed",
-				"request_id": "1212",
-				"params": {
-					"user_id": id,
-					"access_token":"2c47d1312c47d1312c47d131972c32608422c472c47d13173add6862d3b4b7516945aba",
-					"v":"5.130"
-				}
-			}).then(resp => {
-				console.info(resp)
-				if(!resp.isAllowed){
-					bridge.send("VKWebAppAllowNotifications")
-				}
-			}).catch(e => console.log(e.error_data))
-		})
+		fetchData().then(mainStore.initApp).catch(e => console.log(e.error_data))
+		// .then((id) => {
+		// 	bridge.send("VKWebAppCallAPIMethod", {
+		// 		"method": "apps.isNotificationsAllowed",
+		// 		"request_id": "1212",
+		// 		"params": {
+		// 			"user_id": id,
+		// 			"access_token":"2c47d1312c47d1312c47d131972c32608422c472c47d13173add6862d3b4b7516945aba",
+		// 			"v":"5.130"
+		// 		}
+		// 	}).then(resp => {
+		// 	})
 	}, []);
 	const onModalChangeForm = e => {
 		const { name, value } = e.currentTarget;

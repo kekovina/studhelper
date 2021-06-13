@@ -29,6 +29,7 @@ class MainStore{
     modal = null
     modalHistory = []
     settings = {}
+    coords = {coords:{}, result: false, where: false}
     get currentLesson(){
       const get = () => {
         let date = getDate(new Date())
@@ -82,7 +83,9 @@ class MainStore{
             analizationSchedule: computed,
             settings: observable,
             loadingAppStatus: observable,
+            coords: observable,
 
+            setCoords: action,
             updateLoadingAppStatus: action,
             setActivePanel: action,
             updateScreenHistory: action,
@@ -108,6 +111,7 @@ class MainStore{
             ...user
         }
     }
+    setCoords = (coords) => this.coords = {...this.coords, ...coords}  
     updateLoadingAppStatus = status => this.loadingAppStatus = {...this.loadingAppStatus, ...status}
     updateScreenHistory = history => this.screenHistory = history
     setSettings = settings => this.settings = settings
@@ -141,7 +145,6 @@ class MainStore{
 				}else{
           this.updateLoadingAppStatus({code: 2, text: ['Возникла проблема при старте приложения :(']})
 				}
-        console.log(res)
 			})
       .then(() => this.setPopout(null))
     }
