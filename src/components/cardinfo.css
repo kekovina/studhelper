@@ -1,0 +1,24 @@
+.card-info{
+    width: 100%;
+    background: #0183CF20;
+    padding: 10px 15px;
+    box-sizing: border-box;
+    border-radius: 5px;
+    border-top: 3px solid#0183CF
+}
+.card-info.dark{
+    background: var(--secondary_color);
+}
+.card-info__title{
+    text-transform: uppercase;
+    font-size: 18px
+}
+.card-info__subtitle{
+    text-transform: uppercase;
+    font-size: 10px;
+    color: lightgray
+}
+.card-info__content{
+    margin-top: 5px;
+    font-size: 12px
+}

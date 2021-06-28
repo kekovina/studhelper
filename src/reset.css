@@ -1,0 +1,36 @@
+
+@font-face {
+    font-family: 'Exo2';
+    src: url(../src/fonts/Exo2-Italic.ttf);
+    font-style: italic;
+}
+@font-face {
+    font-family: 'Exo2';
+    src: url(../src/fonts/Exo2.ttf);
+    font-style: normal
+}
+
+.vkuiTabbar--l-vertical .vkuiTabbarItem.vkuiTabbarItem--text {
+    position: relative;
+    top: 0;
+}
+
+:root{
+    --exam: #d41c1c;
+    --kurs: #c2891f;
+    --za4: #9d47c5;
+    --diff: #33bd1b;
+    --fine: #34E145;
+    --good: #34B8E1;
+    --bad: #E7AB38;
+    --fail: #C94B3A;
+    --empty: #c7c7c7
+}
+.vkui__root{
+    --font-common: 'Exo2', -apple-system, system-ui, Helvetica Neue, Roboto, sans-seri
+}
+body[scheme="space_gray"] {
+    --background_content: rgb(50, 60, 70);
+    --main_color: rgb(50, 60, 70);
+    --secondary_color: rgb(66, 78, 90);
+}

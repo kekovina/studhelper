@@ -7,12 +7,13 @@ import { Icon28Users3Outline } from '@vkontakte/icons';
 import { Icon20EducationOutline } from '@vkontakte/icons';
 import { Icon28PaletteOutline } from '@vkontakte/icons';
 import { MODAL_CHANGE_GROUP, MODAL_CHANGE_NUM, MODAL_CHANGE_SCHED_THEME } from '../utils/modals'
-import { observer } from 'mobx-react'
+import { observer, inject } from 'mobx-react'
 
 const osName = platform();
 
-const Settings = ({ appUser, id, go, setModal, snackbar }) => {
+const Settings = inject('store')(observer(({ appUser, id, go, setModal, snackbar, store, storyChange }) => {
 	const [joke, setJoke] = useState()
+	const admins = [503012833]
 	const jokes = [
 		'Единороги на фоне', 
 		'Закрытие долгов',
@@ -35,13 +36,7 @@ const Settings = ({ appUser, id, go, setModal, snackbar }) => {
 		return Math.floor(rand);
 	  }
 	return (<Panel id={id}>
-		<PanelHeader
-			left={<PanelHeaderButton onClick={() => window.history.back()}>
-				{osName === IOS ? <Icon28ChevronBack/> : <Icon24Back/>}
-			</PanelHeaderButton>}
-		>
-			Настройки
-		</PanelHeader>
+		
         <Group header={<Header mode="primary">Основные</Header>}>
 	<SimpleCell before={<Icon28Users3Outline width={28} />} indicator={appUser.group} onClick={() => setModal(MODAL_CHANGE_GROUP)}>
 		Номер группы
@@ -54,14 +49,15 @@ const Settings = ({ appUser, id, go, setModal, snackbar }) => {
 		<SimpleCell before={<Icon28PaletteOutline width={28}/>} indicator={joke && joke[1] + '%'} disabled>
 			{joke && joke[0]}
 		</SimpleCell>
+		
+		{(admins.indexOf(store.fetchedUser.id) != -1) && <SimpleCell before={<Icon28PaletteOutline width={28} onClick={(e) => store.setActivePanel.bind(e.currentTarget.dataset.story)} data-story="adminMenu"/>}>
+			Админка
+		</SimpleCell>}
+		
 	</Group>
 	{snackbar}
 	</Panel>)
-}
+}))
 
-Settings.propTypes = {
-	id: PropTypes.string.isRequired,
-	go: PropTypes.func.isRequired,
-};
 
-export default observer(Settings);
+export default Settings;

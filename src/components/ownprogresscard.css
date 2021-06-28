@@ -1,0 +1,68 @@
+
+
+.bar{
+    width: 100%;
+    display: flex;
+    box-shadow: 1px 1px 5px #eee;
+    border-radius: 5px;
+    margin: 10px 0;
+  }
+  .range{
+    width: 80%;
+    position: relative
+  }
+  .range-text{
+    position: relative;
+    z-index: 5;
+    padding: 5px 10px;
+  }
+  .status{
+    width: 20%;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-left: 1px solid #eee
+  }
+  .range-line{
+    z-index: 1;
+    position: absolute;
+    content: '';
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 0%;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+    transition: 1s cubic-bezier(.21,-0.01,.11,.85);
+  }
+.bar.exam{
+    border-top: 3px solid var(--exam);
+}
+.bar.kurs{
+    border-top: 3px solid var(--kurs);
+}
+.bar.za4{
+    border-top: 3px solid var(--za4);
+}
+.bar.diff{
+    border-top: 3px solid var(--diff);
+}
+.bar.empty{
+    border-top: 3px solid var(--empty);
+}
+.range-line.fine{
+    background-color: var(--fine);
+}
+.range-line.good{
+  background-color: var(--good);
+}
+.range-line.bad{
+  background-color: var(--bad);
+}
+.range-line.fail{
+  background-color: var(--fail);
+}
+.range-line.empty{
+  background-color: var(--empty);
+}

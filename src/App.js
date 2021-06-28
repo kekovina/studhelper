@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Icon56NotificationOutline, Icon24Done, Icon24Cancel } from '@vkontakte/icons';
+import { Icon24ClockOutline, Icon28BrainOutline, Icon24Done, Icon24Cancel, Icon28NewsfeedOutline, Icon28ServicesOutline, Icon28HomeOutline, Icon28UserCircleOutline } from '@vkontakte/icons';
 import bridge from '@vkontakte/vk-bridge';
 import View from '@vkontakte/vkui/dist/components/View/View';
 import ScreenSpinner from '@vkontakte/vkui/dist/components/ScreenSpinner/ScreenSpinner';
-import { withAdaptivity, ConfigProvider, AdaptivityProvider, AppRoot, Avatar, Snackbar, ModalRoot, ModalPage, ModalPageHeader, PanelHeaderButton, FormLayout, Group, Text, Input, Button, Radio } from '@vkontakte/vkui'
+import { withAdaptivity, Epic, Tabbar, TabbarItem, ConfigProvider, AdaptivityProvider, AppRoot, Avatar, Snackbar, ModalRoot, ModalPage, ModalPageHeader, PanelHeaderButton, FormLayout, Group, Text, Input, Button, Radio } from '@vkontakte/vkui'
 import '@vkontakte/vkui/dist/vkui.css';
 import axios from 'axios'
 import { observer, Provider } from 'mobx-react'
@@ -25,6 +25,7 @@ import Hello from './panels/Hello'
 import AdminMenu from './panels/AdminMenu'
 import LastVisit from './panels/admin/LastVisit'
 import { MODAL_CHANGE_GROUP, MODAL_CHANGE_NUM, MODAL_CHANGE_SCHED_THEME } from './utils/modals.js'
+import './reset.css'
 
 const pointInPolygon = require('point-in-polygon')
 
@@ -104,29 +105,30 @@ const App = () => {
 	}
 	useEffect(() => {
 		
-		bridge.send('VKWebAppGetGeodata').then(data => {
-			if(data.available){
-				let coords = [
-					['Гл./9й',[54.166817,37.588596], [54.165753, 37.587397], [54.166590, 37.585001], [54.167693, 37.586229]],
-					// ['дом', [54.213367,37.627497],[54.212861,37.627455],[54.212759, 37.628544], [54.213189, 37.628692]],
-					['5й', [54.173112, 37.591369], [54.172595, 37.592710], [54.173454, 37.593716], [54.173882, 37.592238]]
+		// bridge.send('VKWebAppGetGeodata').then(data => {
+		// 	if(data.available){
+		// 		let coords = [
+		// 			['Гл./9й',[54.166817,37.588596], [54.165753, 37.587397], [54.166590, 37.585001], [54.167693, 37.586229]],
+		// 			// ['дом', [54.213367,37.627497],[54.212861,37.627455],[54.212759, 37.628544], [54.213189, 37.628692]],
+		// 			['5й', [54.173112, 37.591369], [54.172595, 37.592710], [54.173454, 37.593716], [54.173882, 37.592238]]
 				
-				]
-				let r = coords.map(coord => {
-					if(pointInPolygon([data.lat, data.long], coord.slice(1))){
-						return coord[0]
-					} 
-				})
-				let result = r.filter(i => i)
-				if(result.length){
-					mainStore.setCoords({coords: {lat: data.lat, long: data.long, acc: data.accuracy}, result: true, where: result[0]})
-				} else {
-					mainStore.setCoords({coords: {lat: data.lat, long: data.long, acc: data.accuracy}, result: false, where: false})
-				}
-			}else{
-				mainStore.setCoords({coords: {}, where: false, result: 'Геолокация недоступна'})
-			}
-		})
+		// 		]
+		// 		let r = coords.map(coord => {
+		// 			if(pointInPolygon([data.lat, data.long], coord.slice(1))){
+		// 				return coord[0]
+		// 			} 
+		// 		})
+		// 		let result = r.filter(i => i)
+		// 		if(result.length){
+		// 			mainStore.setCoords({coords: {lat: data.lat, long: data.long, acc: data.accuracy}, result: true, where: result[0]})
+		// 		} else {
+		// 			mainStore.setCoords({coords: {lat: data.lat, long: data.long, acc: data.accuracy}, result: false, where: false})
+		// 		}
+		// 	}else{
+		// 		mainStore.setCoords({coords: {}, where: false, result: 'Геолокация недоступна'})
+		// 	}
+		// })
+
 		async function fetchData() {
 			return await bridge.send('VKWebAppGetUserInfo').then(res => {
 				mainStore.setVkUser(res);
@@ -182,7 +184,7 @@ const App = () => {
             </ModalPageHeader>
           }
         >
-			<Group style={{paddingBottom: "50px"}}>
+			<Group style={{ padding: '0 10px', paddingBottom: "25px"}}>
 				<FormLayout>
 					<Input
 					type="text"
@@ -205,7 +207,7 @@ const App = () => {
             </ModalPageHeader>
           }
         >
-			<Group style={{paddingBottom: "50px"}}>
+			<Group style={{ padding: '0 10px', paddingBottom: "25px"}}>
 				<FormLayout>
 					<Input
 					type="text"
@@ -281,27 +283,87 @@ const App = () => {
 			window.removeEventListener('popstate')
 		}
 	}, [])
-
+	const onStoryChange = (e) => {
+		mainStore.setActivePanel(e.currentTarget.dataset.story)
+	}
 	return (
 		<ConfigProvider>
 			<AdaptivityProvider>
 				<AppRoot mode="full">
 					<Provider store={mainStore}>
-						<View activePanel={mainStore.activePanel} popout={mainStore.popout} modal={modalRoot} >
-							<Start id="start" initApp={mainStore.initApp} createError={createError} createUser={createUser} setPopout={mainStore.setPopout} setActivePanel={mainStore.setActivePanel} setAppUser={mainStore.setAppUser} vku={mainStore.fetchedUser}/>
-							<Home id='home' fetchedUser={mainStore.fetchedUser} go={go} appUser={mainStore.appUser}/>
-							<Schedule id="schedule" go={go} setPopout={mainStore.setPopout} schedule={mainStore.schedule} setSchedule={setSchedule} group={mainStore.appUser.group} appUser={mainStore.appUser} createError={createError}/>
-							<Settings id="settings" go={go} appUser={mainStore.appUser} setModal={mainStore.setModal} snackbar={snackbar}/>
-							<DetailedProgress id="detailedprogress" go={go} data={mainStore.detailed}/>
-							<Error id='error' err={mainStore.error} go={go}/>
-							<Progress id="progress" go={go} createError={createError} setPopout={mainStore.setPopout} appUser={mainStore.appUser} setDetailed={mainStore.setDetailed} progress={mainStore.progress} setProgress={mainStore.setProgress}/>
-							<News id="news" go={go} />
-
+						<Epic activeStory={mainStore.activePanel} tabbar={ mainStore.activePanel != 'hello' && mainStore.activePanel != 'start' &&
+							<Tabbar>
+								<TabbarItem
+								onClick={onStoryChange}
+								selected={mainStore.activePanel === 'news'}
+								data-story="news"
+								text="Новости"
+								style={{background: 'var(--background_content)'}}
+								><Icon28NewsfeedOutline /></TabbarItem>
+								<TabbarItem
+								onClick={onStoryChange}
+								selected={mainStore.activePanel === 'schedule'}
+								data-story="schedule"
+								text={mainStore.settings.isExam ? "Сессия" : "Расписание"}
+								style={{background: 'var(--background_content)'}}
+								><Icon24ClockOutline/></TabbarItem>
+								<TabbarItem
+								onClick={onStoryChange}
+								selected={mainStore.activePanel === 'home'}
+								data-story="home"
+								text="Главная"
+								style={{background: 'var(--background_content)'}}
+								><Icon28HomeOutline /></TabbarItem>
+								<TabbarItem
+								onClick={onStoryChange}
+								selected={mainStore.activePanel === 'progress'}
+								data-story="progress"
+								text="Зачётка"
+								style={{background: 'var(--background_content)'}}
+								><Icon28BrainOutline /></TabbarItem>
+								<TabbarItem
+								onClick={onStoryChange}
+								selected={mainStore.activePanel === 'settings'}
+								data-story="settings"
+								text="Профиль"
+								style={{background: 'var(--background_content)'}}
+								><Icon28UserCircleOutline /></TabbarItem>
+							</Tabbar>
+        	}>
+						<View id="hello" activePanel="hello">
 							<Hello id="hello" go={go} />
-
+						</View>
+						<View id="home" activePanel="home">
+							<Home id='home' fetchedUser={mainStore.fetchedUser} go={go} appUser={mainStore.appUser}/>
+						</View>
+						<View id="schedule" activePanel="schedule">
+							<Schedule id="schedule" go={go} setPopout={mainStore.setPopout} schedule={mainStore.schedule} setSchedule={setSchedule} group={mainStore.appUser.group} appUser={mainStore.appUser} createError={createError}/>
+						</View>
+						<View id="settings" activePanel="settings" modal={modalRoot}>
+							<Settings id="settings" go={go} appUser={mainStore.appUser} setModal={mainStore.setModal} snackbar={snackbar} storyChange={onStoryChange}/>
+						</View>
+						<View id="start" activePanel="start">
+							<Start id="start" initApp={mainStore.initApp} createError={createError} createUser={createUser} setPopout={mainStore.setPopout} setActivePanel={mainStore.setActivePanel} setAppUser={mainStore.setAppUser} vku={mainStore.fetchedUser}/>
+						</View>
+						<View id="news" activePanel="news">
+							<News id="news" go={go} />
+						</View>
+						<View id="error" activePanel="error">
+							<Error id='error' err={mainStore.error} go={go}/>
+						</View>
+						<View id="progress" activePanel="progress">
+							<Progress id="progress" go={go} createError={createError} setPopout={mainStore.setPopout} appUser={mainStore.appUser} setDetailed={mainStore.setDetailed} progress={mainStore.progress} setProgress={mainStore.setProgress}/>
+						</View>
+						<View id="adminMenu" activePanel="adminMenu">
 							<AdminMenu id="adminMenu" go={go} snackbar={snackbar} setSnackbar={setSnackbar}/>
+						</View>
+						<View id="lastVisit" activePanel="lastVisit">
 							<LastVisit id="lastVisit" go={go} setPopout={mainStore.setPopout}/>
 						</View>
+						<View activePanel={mainStore.activePanel} popout={mainStore.popout} modal={modalRoot} >
+							<DetailedProgress id="detailedprogress" go={go} data={mainStore.detailed}/>
+						</View>
+						</Epic>
 					</Provider>
 				</AppRoot>
 			</AdaptivityProvider>

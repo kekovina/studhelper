@@ -1,13 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
-import { platform, IOS, Group, Header, ActionSheet, ActionSheetItem, Text, Panel, PanelHeader, PanelHeaderButton} from '@vkontakte/vkui';
-import Icon28ChevronBack from '@vkontakte/icons/dist/28/chevron_back';
-import Icon24Back from '@vkontakte/icons/dist/24/back';
+import { platform, IOS, Group, Header, ActionSheet, ScreenSpinner, ActionSheetItem, Text, Panel, PanelHeader, PanelHeaderButton} from '@vkontakte/vkui';
 import { Icon44SmileOutline } from '@vkontakte/icons';
 import { getDate, prepareDate, getWeek, getTime } from '../utils/functions'
 import { inject, observer } from 'mobx-react'
-import Alesha from '../components/Alesha'
-import mainStore from '../store/mainStore'
 
 import './Schedule.css';
 
@@ -17,7 +12,8 @@ const osName = platform();
 const Schedule = inject("store")(observer(({ store, setPopout, id, go }) => {
 	const [selectedDate, setSelectedDate] = useState(getDate);
 	const [selectedSchedule, setSelectedSchedule] = useState(null)
-	const { schedule } = store
+	const { schedule, getSchedule } = store
+	const [scheduleReady, setScheduleReady] = useState(false)
 
 	
 	var weeks = 0;
@@ -31,7 +27,6 @@ const Schedule = inject("store")(observer(({ store, setPopout, id, go }) => {
 			setSelectedDate(type)
 		}
 	}
-	
 	useEffect(() => {
 		if(selectedDate.day.getDay() == 0){
 			setSelectedDate(getDate(new Date(), 1))
@@ -76,61 +71,72 @@ const Schedule = inject("store")(observer(({ store, setPopout, id, go }) => {
 	},[schedule, selectedDate])
 
 
-
-
-	if(store.settings.isExam){
-		return (<Panel id={id}>
-			<PanelHeader
-				left={<PanelHeaderButton onClick={() => window.history.back()}>
-					{osName === IOS ? <Icon28ChevronBack/> : <Icon24Back/>}
-				</PanelHeaderButton>}
-			>
-				Расписание. Сессия
-			</PanelHeader>
-			<Group header={schedule ? <Header mode="secondary">Расписание загружено {prepareDate(schedule.updated)}</Header> : null}></Group>
-			{schedule && schedule.data.data.map(subject => {
-				const status = (now.getDate() == selectedDate.day.getDate()) && (getTime(now) >= subject.start) && (getTime(now) <= subject.end) ? 'active' : (now.getDate() == selectedDate.day.getDate()) && (getTime(now) >= subject.end) ? "last" :  now.getTime() > selectedDate.day.getTime() ? "last" : "future"
-				return (
-					<Group header={schedule ? <Header mode="secondary">{subject.date}</Header> : null}>
-						<Alesha subject={subject.schedule[0]} selectedDate={selectedDate} status={status} exam={store.settings.isExam}/>
-					</Group>)
-			})}
-			{!schedule && (
-			<Group style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
-				<Icon44SmileOutline 	width={100} height={100} style={{color: '#aaa'}}/>
-				<Text weight="medium" style={{fontSize: '18px', color: "#aaa", textTransform: 'uppercase', marginTop: "10px"}}>Расписания нет :(</Text>
-			</Group>
-		  )}
+	// if(!scheduleReady && (schedule.hasOwnProperty('data') && !schedule.data) || !schedule){
+	// 	getSchedule()
+	// 	setPopout(<ScreenSpinner size='large' />)
+	// 	setScheduleReady(true)
+	// 	return (<div>Гружу</div>)
+	// } else {
+	// 	if(store.settings.isExam){
+	// 		return (<Panel id={id}>
+	// 			<PanelHeader
+	// 				left={<PanelHeaderButton onClick={() => window.history.back()}>
+	// 					{osName === IOS ? <Icon28ChevronBack/> : <Icon24Back/>}
+	// 				</PanelHeaderButton>}
+	// 			>
+	// 				Расписание. Сессия
+	// 			</PanelHeader>
+	// 			<Group header={schedule ? <Header mode="secondary">Расписание загружено {prepareDate(schedule.updated)}</Header> : null}></Group>
+	// 			{schedule && schedule.hasOwnProperty('data') && schedule.data.data.map(subject => {
+	// 				const status = (now.getDate() == selectedDate.day.getDate()) && (getTime(now) >= subject.start) && (getTime(now) <= subject.end) ? 'active' : (now.getDate() == selectedDate.day.getDate()) && (getTime(now) >= subject.end) ? "last" :  now.getTime() > selectedDate.day.getTime() ? "last" : "future"
+	// 				return (
+	// 					<Group header={schedule ? <Header mode="secondary">{subject.date}</Header> : null}>
+	// 						<Alesha subject={subject.schedule[0]} selectedDate={selectedDate} status={status} exam={store.settings.isExam}/>
+	// 					</Group>)
+	// 			})}
+	// 			{(!schedule || !schedule.hasOwnProperty('data')) && (
+	// 			<Group style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+	// 				<Icon44SmileOutline 	width={100} height={100} style={{color: '#aaa'}}/>
+	// 				<Text weight="medium" style={{fontSize: '18px', color: "#aaa", textTransform: 'uppercase', marginTop: "10px"}}>Расписания нет :(</Text>
+	// 			</Group>
+	// 		  )}
+	// 			</Panel>)
+	// 	} else {
+	// 		return (<Panel id={id}>
+	// 			<PanelHeader
+	// 				left={<PanelHeaderButton onClick={go} data-to="home">
+	// 					{osName === IOS ? <Icon28ChevronBack/> : <Icon24Back/>}
+	// 				</PanelHeaderButton>}
+	// 			>
+	// 				Расписание
+	// 			</PanelHeader>
+	// 			<div className="selected_date">{selectedDate.text}. {selectedDate.day.getDay() ? `${selectedDate.day.getWeek() % 2 ? "Чётная" : "Нечётная"} неделя` : ''}</div>
+	// 			<div className="changewrap">
+	// 				<button onClick={openSelector} className={`changedate ${mainStore.theme}`}>Выбрать другую дату</button>
+	// 			</div>
+	// 			<Group header={schedule ? <Header mode="secondary">Расписание загружено {prepareDate(schedule.updated)}</Header> : null}>
+	// 			{selectedSchedule && selectedSchedule.map(subject => {
+	// 				const status = (now.getDate() == selectedDate.day.getDate()) && (getTime(now) >= subject.start) && (getTime(now) <= subject.end) ? 'active' : (now.getDate() == selectedDate.day.getDate()) && (getTime(now) >= subject.end) ? "last" :  now.getTime() > selectedDate.day.getTime() ? "last" : "future"
+	// 				return (<Alesha subject={subject} selectedDate={selectedDate} status={status}/>)
+	// 			})}
+	// 		  {!selectedSchedule && (
+	// 			<Group style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+	// 				<Icon44SmileOutline 	width={100} height={100} style={{color: '#aaa'}}/>
+	// 				<Text weight="medium" style={{fontSize: '18px', color: "#aaa", textTransform: 'uppercase', marginTop: "10px"}}>Расписания на этот день нет</Text>
+	// 			</Group>
+	// 		  )}
+				
+		
+	// 			</Group>
+	// 		</Panel>)
+	// 	}
+	// }
+	return (<Panel id={id}>
+				<div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', marginTop: '20px'}}>
+	 				<Icon44SmileOutline 	width={100} height={100} style={{color: '#aaa'}}/>
+	 				<Text weight="medium" style={{fontSize: '18px', color: "#aaa", textTransform: 'uppercase', marginTop: "10px"}}>Расписания на этот день нет</Text>
+	 			</div>
 			</Panel>)
-	} else {
-		return (<Panel id={id}>
-			<PanelHeader
-				left={<PanelHeaderButton onClick={go} data-to="home">
-					{osName === IOS ? <Icon28ChevronBack/> : <Icon24Back/>}
-				</PanelHeaderButton>}
-			>
-				Расписание
-			</PanelHeader>
-			<div className="selected_date">{selectedDate.text}. {selectedDate.day.getDay() ? `${selectedDate.day.getWeek() % 2 ? "Чётная" : "Нечётная"} неделя` : ''}</div>
-			<div className="changewrap">
-				<button onClick={openSelector} className={`changedate ${mainStore.theme}`}>Выбрать другую дату</button>
-			</div>
-			<Group header={schedule ? <Header mode="secondary">Расписание загружено {prepareDate(schedule.updated)}</Header> : null}>
-			{selectedSchedule && selectedSchedule.map(subject => {
-				const status = (now.getDate() == selectedDate.day.getDate()) && (getTime(now) >= subject.start) && (getTime(now) <= subject.end) ? 'active' : (now.getDate() == selectedDate.day.getDate()) && (getTime(now) >= subject.end) ? "last" :  now.getTime() > selectedDate.day.getTime() ? "last" : "future"
-				return (<Alesha subject={subject} selectedDate={selectedDate} status={status}/>)
-			})}
-		  {!selectedSchedule && (
-			<Group style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
-				<Icon44SmileOutline 	width={100} height={100} style={{color: '#aaa'}}/>
-				<Text weight="medium" style={{fontSize: '18px', color: "#aaa", textTransform: 'uppercase', marginTop: "10px"}}>Расписания на этот день нет</Text>
-			</Group>
-		  )}
-			
-	
-			</Group>
-		</Panel>)
-	}
 }))
 
 

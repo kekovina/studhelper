@@ -1,13 +1,8 @@
 import React, { useState, useEffect} from 'react';
 import PropTypes from 'prop-types';
-import { platform, IOS, Gallery, Group, Header, CardScroll, Card, ScreenSpinner, Panel, PanelHeader, PanelHeaderButton } from '@vkontakte/vkui';
-import Icon28ChevronBack from '@vkontakte/icons/dist/28/chevron_back';
-import Icon24Back from '@vkontakte/icons/dist/24/back';
-
-import CustomCard from '../components/CustomCard'
-import CustomGallery from '../components/CustomGallery'
-import Accordeon from '../components/Accordeon'
-import AleshaCard from '../components/AleshaCard'
+import { platform,  Group, ScreenSpinner, Panel, SubnavigationBar, SubnavigationButton } from '@vkontakte/vkui';
+import { Icon16ClockOurline } from '@vkontakte/icons';
+import OwnProgressCard from '../components/OwnProgressCard'
 
 import { getProgress } from '../utils/ProgressParser'
 import { prepareDate } from '../utils/functions'
@@ -24,6 +19,7 @@ const osName = platform();
 
 const Progress = ({ setPopout, go, id, appUser, progress, setProgress, createError }) => {
 	const [ activeTerm, setActiveTerm ] = useState(null)
+	const [ selectedTerm, setSelectTerm ] = useState(0)
 	const getProgress = () => {
 		
 		try{
@@ -31,6 +27,7 @@ const Progress = ({ setPopout, go, id, appUser, progress, setProgress, createErr
 			.then(res => {
 				if(!res.data.err){
 					setProgress(res.data)
+					setSelectTerm(res.data.res.length - 1)
 				} else {
 					createError({type: 1, descr: res.data.text || "Сервер не вернул данные", name: "Ошибка запроса", code: res.data, back: 'home'})
 					setPopout(null)
@@ -57,35 +54,34 @@ const Progress = ({ setPopout, go, id, appUser, progress, setProgress, createErr
 	
 	return (
 	<Panel id={id}>
-		<PanelHeader
-			left={<PanelHeaderButton onClick={() => window.history.back()}>
-				{osName === IOS ? <Icon28ChevronBack/> : <Icon24Back/>}
-			</PanelHeaderButton>}
-		>
-			Моя зачётка
-		</PanelHeader>
-		{ progress && <div className="updated">Обновлено {prepareDate(progress.cacheTime)}</div> }
-		{progress && progress.res.map((item, term) => {
-			return <Accordeon theme={mainStore.theme} title={`Семестр ${term+1}`} active={activeTerm} setActive={setActiveTerm}>
-				{item.map(i => <AleshaCard onClick={ i.km==0 ? null : go } data-to="detailedprogress" data-km={JSON.stringify({...i, term: term})} data={i}/>)}
-			</Accordeon>
-		})}
+		<div style={{margin: '20px 10px'}}>
+			{ progress && 
+			<div style={{display: 'flex'}}>
+				<Icon16ClockOurline style={{alignSelf: 'center'}}/>
+				<div className="updated">Обновлено {prepareDate(progress.cacheTime)}</div>
+			</div>
+			}
+			<Group>
+          <SubnavigationBar>
+			{progress && progress.res.map((i,index) => (
+				<SubnavigationButton
+				selected={selectedTerm == index}
+				onClick={() => setSelectTerm(index)}
+			  >
+				Семестр {index+1}
+			  </SubnavigationButton>
+			))}
+          </SubnavigationBar>
+        </Group>
+		{/* {progress && JSON.stringify(progress.res[selectedTerm])} */}
+		{progress && progress.res[selectedTerm].map(i => <OwnProgressCard  data={i}/>)}
+		</div>
+		
+		
+		
 
-		{/* { progress && progress.doc.map((item, term) => {
-			return (<div className={scheme == "space_gray" ? "card-block dark" : "card-block"}>
-				<CardScroll size="s">
-					{item.map(i => <Card onClick={ i.km==0 ? null : go } data-to="detailedprogress" data-km={JSON.stringify({...i, term: term})}><CustomCard data={i}/></Card>)}
-				</CardScroll>
-				<div class="card-divider">Семестр {term+1}</div>
-			</div>)
-		})} */}
 	</Panel>
 )
 		};
-
-Progress.propTypes = {
-	id: PropTypes.string.isRequired,
-	go: PropTypes.func.isRequired,
-};
 
 export default Progress;

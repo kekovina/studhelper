@@ -30,13 +30,6 @@ const News = ({ id, go }) => {
                 })
     }, []);
 	return (<Panel id={id}>
-		<PanelHeader
-			left={<PanelHeaderButton onClick={() => window.history.back()}>
-				{osName === IOS ? <Icon28ChevronBack/> : <Icon24Back/>}
-			</PanelHeaderButton>}
-		>
-			Новости
-		</PanelHeader>
         <CardGrid style={{marginTop: "15px"}}>
             {news && news.map(item => {
                 const attachments = item.attachments ? item.attachments.pop() : null
