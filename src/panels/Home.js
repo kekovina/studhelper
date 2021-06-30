@@ -1,10 +1,11 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Panel, Header, Avatar  } from '@vkontakte/vkui'
 import { Icon28FireCircleFillRed } from '@vkontakte/icons';
 import { Icon16ClockOurline, Icon20Users, Icon20EducationOutline, Icon20NewsfeedOutline, Icon24Settings, Icon20ServicesOutline } from '@vkontakte/icons'
 import NextLessons from '../components/NextLessons'
 import CardInfo from '../components/CardInfo'
+import { timeToDate, timeFormat } from '../utils/functions'
 
 import './home.css'
 import { inject, observer } from 'mobx-react';
@@ -12,7 +13,21 @@ import { inject, observer } from 'mobx-react';
 
 
 const Home = inject('store')(observer(({ id, go, fetchedUser, appUser, store }) => {
+	const [ timerValue, updateTimerValue ] = useState(timeToDate(new Date('2021-09-01 00:00:00')).s)
+	const timerHTML = <div>{timeFormat('dd дн. hh ч. mm мин. ss сек.', timerValue)}</div> 
 	const next_para = <div>Нет пар</div>
+	useEffect(() => {
+		const interval = setInterval(() => {
+			if(timerValue == 0){
+				clearInterval(interval)
+				return
+			}
+			updateTimerValue(timerValue - 1)
+		}, 1000)
+		return () => {
+			clearInterval(interval)
+		}
+	}, [timerValue])
 	return (
 	<Panel id={id} style={{background: '#323C46'}}>
 		<div className="head-block">
@@ -37,7 +52,8 @@ const Home = inject('store')(observer(({ id, go, fetchedUser, appUser, store }) 
 		}
 		
 		<div style={{margin: "10px 15px"}}>
-			<CardInfo theme={store.theme} title="Следующая пара" content={next_para}/>
+			<CardInfo theme={store.theme} title="До конца лета" content={timerHTML}/>
+			{/* <CardInfo theme={store.theme} title="Следующая пара" content={next_para}/> */}
 		</div>
 	</Panel>
 )}

@@ -16,15 +16,27 @@
 }
 
 :root{
-    --exam: #d41c1c;
-    --kurs: #c2891f;
-    --za4: #9d47c5;
-    --diff: #33bd1b;
-    --fine: #34E145;
-    --good: #34B8E1;
-    --bad: #E7AB38;
-    --fail: #C94B3A;
-    --empty: #c7c7c7
+    --exam:#DB504A;
+    --kurs:#d6ab00;
+    --za4:#24b7ca ;
+    --diff: #537eb6;
+    --empty: #D8E2DC;
+    --fine: #3EFF8B;
+    --good: #31D843;
+    --bad: #EC9F05;
+    --fail: #BF3100;
+    --za4et: #9f9ed6;
+
+    --exam_dark: #DB504A;
+    --kurs_dark: #d6ab00;
+    --za4_dark: #56A3A6;
+    --diff_dark: #084C61;
+    --empty_dark: #4F6D7A;
+    --fine_dark: #00A6FB;
+    --good_dark: #0582CA;
+    --bad_dark: #006494;
+    --fail_dark: #003554;
+    --empty_dark: #0d4662;
 }
 .vkui__root{
     --font-common: 'Exo2', -apple-system, system-ui, Helvetica Neue, Roboto, sans-seri

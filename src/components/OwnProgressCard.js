@@ -1,7 +1,7 @@
 import React from 'react'
 import './ownprogresscard.css'
 
-export default function OwnProgressCard({ data }) {
+export default function OwnProgressCard({ data, theme }) {
     let t = "customcard "
     let d = ""
     let points = 0
@@ -35,7 +35,7 @@ export default function OwnProgressCard({ data }) {
     if(data.t){
         if(data.km == 1){
             if(data.t >= 40){
-                t += "fine"
+                t += "za4et"
             } else {
                 t += "fail"
             }
@@ -50,7 +50,7 @@ export default function OwnProgressCard({ data }) {
             if(data.m){
                 d = "не определено"
                 if(/зач[её]т/gmi.test(data.m)){
-                    t += "fine"
+                    t += "za4et"
                     points = 'зач'
                 } else {
                     if(/отлично/gmi.test(data.m)){
@@ -91,7 +91,7 @@ export default function OwnProgressCard({ data }) {
     }else{
         if(data.km == 1){
             if(/зач[её]т/gmi.test(data.m)){
-                t += "fine"
+                t += "za4et"
                 points = 'зач'
             } else {
                 t += "fail"
@@ -105,7 +105,7 @@ export default function OwnProgressCard({ data }) {
         }
         else if(data.km == 2){
                 if(/зач[её]т/gmi.test(data.m)){
-                    t += "fine"
+                    t += "za4et"
                 } else {
                     if(/отлично/gmi.test(data.m)){
                         t += "fine"
@@ -143,15 +143,32 @@ export default function OwnProgressCard({ data }) {
         }
     }
     return (
-        <div class={`bar ${clt}`}>
-            <div class="range">
-                <div class={`range-line ${t}`} style={{width: `${data.t || 0}%`}}></div>
-                <div class="range-text">
-                    <div>{data.name.length > 50 ? data.name.slice(0,50)+"..." : data.name}</div>
-                    <div>{d}</div>
-                </div>
+        <div class={`bar ${clt} ${theme}`}>
+            <div class="type">
+                {d}
             </div>
-            <div class="status">{points}</div>
+            <div class="range-wrap">
+                <div class="range">
+                    <div class={`range-line ${t}`} style={data.km == 0 ? {width: `${points / 30 * 100}%`} : {width: `${data.t || 0}%`}}>
+
+                    </div>
+                    {(data.km == 1) && <div class="range-ranks">
+                        <div class="range-40"></div>    
+                    </div>}
+                    {(data.km == 0) && <div class="range-ranks">
+                        <div class="range-20"></div>    
+                    </div>}
+                    {(data.km > 1) && <div class="range-ranks">
+                        <div class="range-41"></div>
+                        <div class="range-60"></div> 
+                        <div class="range-80"></div>     
+                    </div>}
+                    <div class="range-text">
+                        <div>{data.name.length > 50 ? data.name.slice(0,50)+"..." : data.name}</div>
+                    </div>
+                </div>
+                <div class="status">{points}</div>
+            </div>
         </div>
     )
 }

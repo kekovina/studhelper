@@ -6,7 +6,7 @@ import OwnProgressCard from '../components/OwnProgressCard'
 
 import { getProgress } from '../utils/ProgressParser'
 import { prepareDate } from '../utils/functions'
-import mainStore from '../store/mainStore'
+import { observer, inject } from 'mobx-react';
 
 import './Progress.css';
 
@@ -17,7 +17,7 @@ const osName = platform();
 
 
 
-const Progress = ({ setPopout, go, id, appUser, progress, setProgress, createError }) => {
+const Progress = inject('store')(observer(({ setPopout, store, id, appUser, progress, setProgress, createError }) => {
 	const [ activeTerm, setActiveTerm ] = useState(null)
 	const [ selectedTerm, setSelectTerm ] = useState(0)
 	const getProgress = () => {
@@ -74,7 +74,7 @@ const Progress = ({ setPopout, go, id, appUser, progress, setProgress, createErr
           </SubnavigationBar>
         </Group>
 		{/* {progress && JSON.stringify(progress.res[selectedTerm])} */}
-		{progress && progress.res[selectedTerm].map(i => <OwnProgressCard  data={i}/>)}
+		{progress && progress.res[selectedTerm].map(i => <OwnProgressCard  theme={store.theme} data={i}/>)}
 		</div>
 		
 		
@@ -82,6 +82,6 @@ const Progress = ({ setPopout, go, id, appUser, progress, setProgress, createErr
 
 	</Panel>
 )
-		};
+		}))
 
 export default Progress;

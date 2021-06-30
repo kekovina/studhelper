@@ -51,4 +51,30 @@ const getTime = (time) => {
 	return `${((time.getHours()+'').length < 2 ? '0' : '')+time.getHours()}:${((time.getMinutes()+'').length < 2 ? '0' : '')+time.getMinutes()}`
 }
 
-module.exports = { prepareDate, getDate, getWeek, getTime }
+const timeToDate = (date, from = new Date()) => {
+	const left = Math.floor(Math.abs(date - from) / 1000)
+	const d = Math.floor(left / 60 / 60 / 24)
+	const h = Math.floor(left / 60 / 60)
+	const m = Math.floor(left / 60)
+	const s = Math.floor(left)
+	return {
+		d, h, m, s 
+	}
+}
+
+const timeFormat = (format, value) => {
+	const d = Math.floor(value / 60 / 60 / 24)
+	const h = Math.floor((value - 24 * 60 * 60 * d) / 60 / 60)
+	const m = Math.floor((value - 24 * 60 * 60 * d - 60 * 60 * h) / 60)
+	const s = Math.floor((value - 24 * 60 * 60 * d - 60 * 60 * h - 60 * m))
+	return format.replace('dd', d).replace('hh', h).replace('mm', m).replace('ss', s)
+}
+function declOfNum(n, text_forms) {  
+    n = Math.abs(n) % 100; 
+    var n1 = n % 10;
+    if (n > 10 && n < 20) { return text_forms[2]; }
+    if (n1 > 1 && n1 < 5) { return text_forms[1]; }
+    if (n1 == 1) { return text_forms[0]; }
+    return text_forms[2];
+}
+module.exports = { prepareDate, getDate, getWeek, getTime, timeToDate, timeFormat }

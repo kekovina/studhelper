@@ -4,7 +4,8 @@
     padding: 10px 15px;
     box-sizing: border-box;
     border-radius: 5px;
-    border-top: 3px solid#0183CF
+    border-top: 3px solid#0183CF;
+    margin: 10px 0
 }
 .card-info.dark{
     background: var(--secondary_color);
