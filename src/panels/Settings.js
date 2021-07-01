@@ -50,7 +50,7 @@ const Settings = inject('store')(observer(({ appUser, id, go, setModal, snackbar
 			{joke && joke[0]}
 		</SimpleCell>
 		
-		{(admins.indexOf(store.fetchedUser.id) != -1) && <SimpleCell before={<Icon28PaletteOutline width={28} onClick={(e) => store.setActivePanel.bind(e.currentTarget.dataset.story)} data-story="adminMenu"/>}>
+		{(admins.indexOf(store.fetchedUser.id) != -1) && <SimpleCell onClick={go} data-to="adminMenu" before={<Icon28PaletteOutline width={28}/>}>
 			Админка
 		</SimpleCell>}
 		

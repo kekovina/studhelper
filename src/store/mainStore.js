@@ -30,40 +30,40 @@ class MainStore{
     modalHistory = []
     settings = {}
     coords = {coords:{}, result: false, where: false}
-    get currentLesson(){
-      const get = () => {
-        let date = getDate(new Date())
-        let day = this.schedule ? this.schedule.data.filter(item => item.date == date.mini)[0]?.schedule || null : null
-        let now = getTime(new Date())
-        // let now = getTime(new Date('2021-05-11 12:00'))
-        let res = day ? day.filter(item => (now <= item.end)).shift() : null
-        if(res){
-          let sched = day.filter(item => item.start == res.start)
-          let text = res.start > now ?  "Следующая пара" : "Сейчас идёт"
-          return { sched, text }
-        }
-        return null
-      }
-      if(!this.settings.isExam){
-        return get()
-      } else {
-        return null
-      }
-    }
-    get analizationSchedule(){
-      let day = null
-      let i = 1;
-      let first
-      if(this.schedule){
-        while(!day){
-          let date = getDate(new Date(), i)
-          day = this.schedule.data.filter(item => item.date == date.mini)[0]?.schedule || null 
-          i++
-        }
-        first = day.shift()
-      }
-      return first || null
-    }
+    // get currentLesson(){
+    //   const get = () => {
+    //     let date = getDate(new Date())
+    //     let day = this.schedule ? this.schedule.data.filter(item => item.date == date.mini)[0]?.schedule || null : null
+    //     let now = getTime(new Date())
+    //     // let now = getTime(new Date('2021-05-11 12:00'))
+    //     let res = day ? day.filter(item => (now <= item.end)).shift() : null
+    //     if(res){
+    //       let sched = day.filter(item => item.start == res.start)
+    //       let text = res.start > now ?  "Следующая пара" : "Сейчас идёт"
+    //       return { sched, text }
+    //     }
+    //     return null
+    //   }
+    //   if(!this.settings.isExam){
+    //     return get()
+    //   } else {
+    //     return null
+    //   }
+    // }
+    // get analizationSchedule(){
+    //   let day = null
+    //   let i = 1;
+    //   let first
+    //   if(this.schedule){
+    //     while(!day){
+    //       let date = getDate(new Date(), i)
+    //       day = this.schedule.data.filter(item => item.date == date.mini)[0]?.schedule || null 
+    //       i++
+    //     }
+    //     first = day.shift()
+    //   }
+    //   return first || null
+    // }
 
     constructor(){
         makeObservable(this, {
@@ -79,8 +79,8 @@ class MainStore{
             modal: observable,
             modalHistory: observable,
             theme: observable,
-            currentLesson: computed,
-            analizationSchedule: computed,
+            // currentLesson: computed,
+            // analizationSchedule: computed,
             settings: observable,
             loadingAppStatus: observable,
             coords: observable,

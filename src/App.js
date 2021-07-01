@@ -237,6 +237,7 @@ const App = () => {
 	)
 	const go = e => {
 		mainStore.setActivePanel(e.currentTarget.dataset.to);
+		console.log('click')
 		window.history.pushState({panel: e.currentTarget.dataset.to}, `${e.currentTarget.dataset.to}`)
 		mainStore.setPopout(null)
 		if(e.currentTarget.dataset.km){

@@ -16,59 +16,59 @@ const Schedule = inject("store")(observer(({ store, setPopout, id, go }) => {
 	const [scheduleReady, setScheduleReady] = useState(false)
 
 	
-	var weeks = 0;
-	const now = new Date()
-	const handler = type => {
-		if(type == "next"){
-			setPopout(null)
-			openSelector()
-			weeks+=1
-		} else {
-			setSelectedDate(type)
-		}
-	}
-	useEffect(() => {
-		if(selectedDate.day.getDay() == 0){
-			setSelectedDate(getDate(new Date(), 1))
-		}
-	}, [])
-	Date.prototype.getWeek = function() {
-        var onejan = new Date(this.getFullYear(), 0, 1);
-		if(this.getDay() == 6){
-			return Math.ceil((((this - onejan - 24*60*60*1000) / 86400000) + onejan.getDay() + 1) / 7);
-		}
-        return Math.ceil((((this - onejan) / 86400000) + onejan.getDay() + 1) / 7);
-    }
-	const openSelector = () => {
-		const popout = (<ActionSheet 
-        onClose={setPopout.bind(this, null)}
-        iosCloseItem={<ActionSheetItem autoclose mode="cancel">Отменить</ActionSheetItem>}
-      >
+	// var weeks = 0;
+	// const now = new Date()
+	// const handler = type => {
+	// 	if(type == "next"){
+	// 		setPopout(null)
+	// 		openSelector()
+	// 		weeks+=1
+	// 	} else {
+	// 		setSelectedDate(type)
+	// 	}
+	// }
+	// useEffect(() => {
+	// 	if(selectedDate.day.getDay() == 0){
+	// 		setSelectedDate(getDate(new Date(), 1))
+	// 	}
+	// }, [])
+	// Date.prototype.getWeek = function() {
+    //     var onejan = new Date(this.getFullYear(), 0, 1);
+	// 	if(this.getDay() == 6){
+	// 		return Math.ceil((((this - onejan - 24*60*60*1000) / 86400000) + onejan.getDay() + 1) / 7);
+	// 	}
+    //     return Math.ceil((((this - onejan) / 86400000) + onejan.getDay() + 1) / 7);
+    // }
+	// const openSelector = () => {
+	// 	const popout = (<ActionSheet 
+    //     onClose={setPopout.bind(this, null)}
+    //     iosCloseItem={<ActionSheetItem autoclose mode="cancel">Отменить</ActionSheetItem>}
+    //   >
 	
-	{
-			getWeek(new Date(now.getTime()+weeks*7*24*60*60*1000)).map((i,index) => {
-			var {day, text, mini} = getDate(i);
-			if(!day.getDay()){
-				return 
-			}
+	// {
+	// 		getWeek(new Date(now.getTime()+weeks*7*24*60*60*1000)).map((i,index) => {
+	// 		var {day, text, mini} = getDate(i);
+	// 		if(!day.getDay()){
+	// 			return 
+	// 		}
 			
-			return (
-			<ActionSheetItem autoclose onClick={handler.bind(this, {text, day, mini})} subtitle="Авто" mode={day.getDate() == selectedDate.day.getDate() ? 'cancel' : 'default'}>
-        	{day.getDate() == new Date(now.getTime()+24*60*60*1000).getDate() ? "завтра" : day.getDate() == now.getDate() ?  "сегодня" : text}
-        </ActionSheetItem>)
-		})}
-		{(weeks < 2 && <ActionSheetItem autoclose onClick={handler.bind(this, "next")} subtitle="Авто">
-        	Другие даты
-        </ActionSheetItem>)}
-      </ActionSheet>)
-		setPopout(popout)
-		weeks+=1
-	}
-	useEffect(() => {
-		if(schedule && !store.settings.isExam){
-			setSelectedSchedule(schedule.data.filter(item => item.date == selectedDate.mini)[0]?.schedule || null)
-		}
-	},[schedule, selectedDate])
+	// 		return (
+	// 		<ActionSheetItem autoclose onClick={handler.bind(this, {text, day, mini})} subtitle="Авто" mode={day.getDate() == selectedDate.day.getDate() ? 'cancel' : 'default'}>
+    //     	{day.getDate() == new Date(now.getTime()+24*60*60*1000).getDate() ? "завтра" : day.getDate() == now.getDate() ?  "сегодня" : text}
+    //     </ActionSheetItem>)
+	// 	})}
+	// 	{(weeks < 2 && <ActionSheetItem autoclose onClick={handler.bind(this, "next")} subtitle="Авто">
+    //     	Другие даты
+    //     </ActionSheetItem>)}
+    //   </ActionSheet>)
+	// 	setPopout(popout)
+	// 	weeks+=1
+	// }
+	// useEffect(() => {
+	// 	if(schedule && !store.settings.isExam){
+	// 		setSelectedSchedule(schedule.data.filter(item => item.date == selectedDate.mini)[0]?.schedule || null)
+	// 	}
+	// },[schedule, selectedDate])
 
 
 	// if(!scheduleReady && (schedule.hasOwnProperty('data') && !schedule.data) || !schedule){
