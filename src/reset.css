@@ -27,6 +27,12 @@
     --fail: #BF3100;
     --za4et: #9f9ed6;
 
+    --empty_att: #D8E2DCc0;
+    --fine_att: #3EFF8Bc0;
+    --good_att: #31D843c0;
+    --bad_att: #EC9F05c0;
+    --fail_att: #BF3100c0;
+
     --exam_dark: #DB504A;
     --kurs_dark: #d6ab00;
     --za4_dark: #56A3A6;
@@ -37,6 +43,13 @@
     --bad_dark: #006494;
     --fail_dark: #003554;
     --empty_dark: #0d4662;
+
+    --fine_dark_att: #00a7fbc0;
+    --good_dark_att: #0582CAc0;
+    --bad_dark_att: #006494c0;
+    --fail_dark_att: #003554c0;
+    --empty_dark_att: #0d4662c0;
+    --za4et_att: #9f9ed6c0;
 }
 .vkui__root{
     --font-common: 'Exo2', -apple-system, system-ui, Helvetica Neue, Roboto, sans-seri

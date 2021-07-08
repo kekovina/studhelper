@@ -74,7 +74,7 @@ const Progress = inject('store')(observer(({ setPopout, store, id, appUser, prog
           </SubnavigationBar>
         </Group>
 		{/* {progress && JSON.stringify(progress.res[selectedTerm])} */}
-		{progress && progress.res[selectedTerm].map(i => <OwnProgressCard  theme={store.theme} data={i}/>)}
+		{progress && progress.res[selectedTerm].map((i) => <OwnProgressCard  theme={store.theme} data={i} />)}
 		</div>
 		
 		

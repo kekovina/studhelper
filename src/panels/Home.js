@@ -14,7 +14,7 @@ import { inject, observer } from 'mobx-react';
 
 const Home = inject('store')(observer(({ id, go, fetchedUser, appUser, store }) => {
 	const [ timerValue, updateTimerValue ] = useState(timeToDate(new Date('2021-09-01 00:00:00')).s)
-	const timerHTML = <div>{timeFormat('dd дн. hh ч. mm мин. ss сек.', timerValue)}</div> 
+	const timerHTML = <div>{timeFormat('dd дн. hh:mm:ss', timerValue)}</div> 
 	const next_para = <div>Нет пар</div>
 	useEffect(() => {
 		const interval = setInterval(() => {

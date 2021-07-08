@@ -1,7 +1,28 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import './ownprogresscard.css'
 
 export default function OwnProgressCard({ data, theme }) {
+    const [ attWidth, setAttWidth ] = useState(0)
+    const [ resWidth, setResWidth ] = useState(0)
+    useEffect(() => {
+        setAttWidth(0)
+        setResWidth(0)
+        const aw = new Promise((resolve, reject) => {
+            setTimeout(() => {
+                document.querySelectorAll('.range-line').forEach(el => el.classList.add('animated'))
+                resolve(setAttWidth(data.a))
+            }, 500)
+        })
+        const rw = new Promise((resolve, reject) => {
+            setTimeout(() => {
+                setResWidth(data.t ? data.t - data.a : 0)
+                resolve()
+            }, 1500)
+        })
+        Promise.all([aw, rw]).then(setTimeout(animationCallback, 3000))
+        
+    }, [data])
+    const animationCallback = () => document.querySelectorAll('.range-line').forEach(el => el.classList.remove('animated'))
     let t = "customcard "
     let d = ""
     let points = 0
@@ -149,7 +170,8 @@ export default function OwnProgressCard({ data, theme }) {
             </div>
             <div class="range-wrap">
                 <div class="range">
-                    <div class={`range-line ${t}`} style={data.km == 0 ? {width: `${points / 30 * 100}%`} : {width: `${data.t || 0}%`}}>
+                    {(data.a != data.t) && data.a && <div class={`range-line att ${t}`} style={{width: `${attWidth}%`}}></div>}
+                    <div class={`range-line ${t}`} style={data.km == 0 ? {width: `${attWidth / 30 * 100}%`} : {width: `${resWidth}%`}}>
 
                     </div>
                     {(data.km == 1) && <div class="range-ranks">
@@ -163,11 +185,11 @@ export default function OwnProgressCard({ data, theme }) {
                         <div class="range-60"></div> 
                         <div class="range-80"></div>     
                     </div>}
-                    <div class="range-text">
-                        <div>{data.name.length > 50 ? data.name.slice(0,50)+"..." : data.name}</div>
-                    </div>
                 </div>
-                <div class="status">{points}</div>
+                <div class="range-text">
+                    <div>{data.name.length > 50 ? data.name.slice(0,50)+"..." : data.name}</div>
+                </div>
+                <div class="status"><span class={data.km ? 'status-att' : ''}>{data.a}</span>{points}</div>
             </div>
         </div>
     )

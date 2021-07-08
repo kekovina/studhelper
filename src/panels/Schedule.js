@@ -3,6 +3,7 @@ import { platform, IOS, Group, Header, ActionSheet, ScreenSpinner, ActionSheetIt
 import { Icon44SmileOutline } from '@vkontakte/icons';
 import { getDate, prepareDate, getWeek, getTime } from '../utils/functions'
 import { inject, observer } from 'mobx-react'
+import HorizontalCalendar from 'vkui-horizontal-calendar'
 
 import './Schedule.css';
 
@@ -132,6 +133,7 @@ const Schedule = inject("store")(observer(({ store, setPopout, id, go }) => {
 	// 	}
 	// }
 	return (<Panel id={id}>
+			{/* <HorizontalCalendar choosed={1} mondayFirst={true} date={new Date()}/> */}
 				<div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', marginTop: '20px'}}>
 	 				<Icon44SmileOutline 	width={100} height={100} style={{color: '#aaa'}}/>
 	 				<Text weight="medium" style={{fontSize: '18px', color: "#aaa", textTransform: 'uppercase', marginTop: "10px"}}>Расписания на этот день нет</Text>
