@@ -121,8 +121,6 @@
 .bar.empty .type{
     background: var(--empty);
 }
-
-
 .range-line.fine{
     background-color: var(--fine);
 }
@@ -154,7 +152,12 @@ background-color: var(--fail_att);
 background-color: var(--empty_att);
 }
 
-
+.range-line.za4et{
+  background-color: var(--za4et);
+}
+.range-line.za4et.att{
+  background-color: var(--za4et_att);
+}
 /* dark */
 .bar.dark{
   box-shadow: 1px 1px 5px var(--secondary_color);
