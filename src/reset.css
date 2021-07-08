@@ -55,7 +55,7 @@
     --font-common: 'Exo2', -apple-system, system-ui, Helvetica Neue, Roboto, sans-seri
 }
 body[scheme="space_gray"] {
-    --background_content: rgb(50, 60, 70);
+    --background_content: rgb(50, 60, 70) !important;
     --main_color: rgb(50, 60, 70);
     --secondary_color: rgb(66, 78, 90);
 }
